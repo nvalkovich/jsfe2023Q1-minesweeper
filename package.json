@@ -1,0 +1,24 @@
+{
+  "name": "nvalkovich-jsfe2023q1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1.git"
+  },
+  "author": "Anastasiya Valkovich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1/issues"
+  },
+  "homepage": "https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1#readme",
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
