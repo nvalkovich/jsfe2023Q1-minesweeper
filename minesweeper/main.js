@@ -1,13 +1,20 @@
 function createCellsArray(size) {
   const cells = [];
-  while (cells.length < size) {
+  for (let i = 0; i < size; i += 1) {
     const cellsRow = [];
-    for (let i = 0; i < 10; i += 1) {
+    for (let j = 0; j < size; j += 1) {
       cellsRow.push({ isMine: false, mineCount: 0, state: 'closed' });
     }
     cells.push(cellsRow);
   }
   return cells;
+}
+
+function removeGrid() {
+  const cells = document.querySelectorAll('.grid__cell');
+  cells.forEach((cell) => {
+    cell.remove();
+  });
 }
 
 function renderPage() {
@@ -86,19 +93,21 @@ function renderPage() {
   grid.className = 'grid-container__grid grid';
   gridContainer.append(grid);
 
-  function renderCells(cells) {
-    for (let i = 0; i < cells.length; i += 1) {
-      if (Array.isArray(cells[i])) {
-        renderCells(cells[i]);
-      } else {
+  function renderGrid(cells) {
+    removeGrid();
+
+    for (let y = 0; y < cells.length; y += 1) {
+      for (let x = 0; x < cells[y].length; x += 1) {
         const cell = document.createElement('div');
         cell.className = 'grid__cell';
+        cell.setAttribute('x', x);
+        cell.setAttribute('y', y);
         grid.append(cell);
       }
     }
   }
 
-  renderCells(createCellsArray(10));
+  renderGrid(createCellsArray(10));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
