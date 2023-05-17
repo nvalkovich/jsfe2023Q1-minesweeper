@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+}
+
+.grid-container {
+  max-width: 502px;
+  margin: 0 auto;
+  border: 1px solid #cecece;
+  background-color: #dcdcdc2e;
+  box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
+}
+
+.grid-container__header {
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.timer,
+.moves-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer__state,
+.moves-counter__state {
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(0, 0, 0, 0.368);
+  background-color: #ffffff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flags-counter__icon,
+.mines-counter__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.flags-counter__icon {
+  background-image: url('assets/icons/flag-maps-and-flags-svgrepo-com.svg');
+}
+
+.mines-counter__icon{
+  background-image: url('assets/icons/bomb-svgrepo-com\ \(2\).svg');
+}
+
+.grid-container__grid {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid__cell {
+  width: 50px;
+  height: 50px;
+  background-color: #BFBFBF;
+  color: black;
+  border-bottom: 4px solid #7B7B7B;
+  border-left: 4px solid #ffffff;
+  border-top: 4px solid #ffffff;
+  border-right: 4px solid #7B7B7B;
+  cursor: pointer;
+}
+
+.grid__cell:active {
+  border: 2px solid rgba(0, 0, 0, 0.368);
+}
