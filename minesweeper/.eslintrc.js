@@ -5,4 +5,9 @@ module.exports = {
   env: {
     browser: true,
   },
+  rules: {
+    'import/extensions': [
+      'error', 'ignorePackages',
+    ],
+  },
 };
