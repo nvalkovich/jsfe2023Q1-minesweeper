@@ -2,7 +2,7 @@ import storage from './storage.js';
 import State from './state.js';
 
 function getRandomNumber(number) {
-  return Math.floor(Math.random() * (number - 0 + 1) + 0);
+  return Math.floor(Math.random() * ((number - 1) - 0 + 1) + 0);
 }
 
 function init(size) {
@@ -30,9 +30,35 @@ function setMines(minesNum, startX, startY) {
     if (!cell.isMine && x !== startX && y !== startY) {
       cell.isMine = true;
       minesCount += 1;
+
+      if (grid[x - 1] && grid[y + 1] && !grid[x - 1][y + 1].isMine) {
+        grid[x - 1][y + 1].mineCount += 1;
+      }
+      if (grid[x - 1] && !grid[x - 1][y].isMine) {
+        grid[x - 1][y].mineCount += 1;
+      }
+      if (grid[x - 1] && grid[y - 1] && !grid[x - 1][y - 1].isMine) {
+        grid[x - 1][y - 1].mineCount += 1;
+      }
+
+      if (grid[x] && grid[y + 1] && !grid[x][y + 1].isMine) {
+        grid[x][y + 1].mineCount += 1;
+      }
+      if (grid[x] && grid[y - 1] && !grid[x][y - 1].isMine) {
+        grid[x][y - 1].mineCount += 1;
+      }
+
+      if (grid[x + 1] && grid[y + 1] && !grid[x + 1][y + 1].isMine) {
+        grid[x + 1][y + 1].mineCount += 1;
+      }
+      if (grid[x + 1] && !grid[x + 1][y].isMine) {
+        grid[x + 1][y].mineCount += 1;
+      }
+      if (grid[x + 1] && grid[y - 1] && !grid[x + 1][y - 1].isMine) {
+        grid[x + 1][y - 1].mineCount += 1;
+      }
     }
   }
-
   storage.setGrid(grid);
 }
 

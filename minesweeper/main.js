@@ -18,6 +18,16 @@ function renderGrid() {
     for (let x = 0; x < gridData[y].length; x += 1) {
       const cell = document.createElement('div');
       cell.className = 'grid__cell';
+      if (gridData[y][x].isMine) {
+        cell.setAttribute('is-mine', true);
+      } else if (!gridData[y][x].isMine && gridData[y][x].mineCount > 0) {
+        cell.innerText = `${gridData[y][x].mineCount}`;
+        cell.setAttribute('is-number', true);
+        cell.setAttribute('number', `${gridData[y][x].mineCount}`);
+      } else {
+        cell.setAttribute('empty', true);
+      }
+
       cell.setAttribute('x', x);
       cell.setAttribute('y', y);
       gridElement.append(cell);
@@ -25,7 +35,7 @@ function renderGrid() {
   }
 }
 
-function renderPage() {
+function renderPage(gridSize) {
   const mainContainer = document.createElement('main');
   mainContainer.className = 'main-container';
   document.body.append(mainContainer);
@@ -81,7 +91,7 @@ function renderPage() {
   const minesCounterState = document.createElement('span');
   minesCounterState.className = 'mines-counter__state';
   minesCounter.append(minesCounterState);
-  minesCounterState.innerText = '10';
+  minesCounterState.innerText = gridSize;
 
   const movesCounter = document.createElement('div');
   movesCounter.className = 'grid-header__moves-counter moves-counter';
@@ -107,5 +117,19 @@ function renderPage() {
 document.addEventListener('DOMContentLoaded', () => {
   const gridSize = 10;
   grid.init(gridSize);
-  renderPage();
+  renderPage(gridSize);
+  let isGameStarted = false;
+
+  const gridElement = document.querySelector('.grid');
+  gridElement.addEventListener('click', (event) => {
+    const x = event.target.getAttribute('x');
+    const y = event.target.getAttribute('y');
+    if (!isGameStarted) {
+      grid.setMines(gridSize, x, y);
+      renderGrid();
+      isGameStarted = true;
+    } else {
+      renderGrid();
+    }
+  });
 });
