@@ -1,5 +1,15 @@
 import grid from './modules/grid.js';
+import game from './modules/game.js';
+import counters from './modules/counters.js';
 import State from './modules/state.js';
+
+function tickHandler(seconds) {
+  document.querySelector('.timer__state').innerText = seconds;
+}
+
+function movesHandler(moves) {
+  document.querySelector('.moves-counter__state').innerText = moves;
+}
 
 function removeGrid() {
   const cells = document.querySelectorAll('.grid__cell');
@@ -55,18 +65,18 @@ function renderPage(gridSize) {
   gridHeader.className = 'grid-container__header grid-header';
   gridContainer.append(gridHeader);
 
-  const timer = document.createElement('div');
-  timer.className = 'grid-header__timer timer';
-  gridHeader.append(timer);
+  const timerElement = document.createElement('div');
+  timerElement.className = 'grid-header__timer timer';
+  gridHeader.append(timerElement);
 
   const timerDescription = document.createElement('span');
   timerDescription.className = 'timer__descr';
-  timer.append(timerDescription);
+  timerElement.append(timerDescription);
   timerDescription.innerText = 'timer:';
 
   const timerState = document.createElement('div');
   timerState.className = 'timer__state';
-  timer.append(timerState);
+  timerElement.append(timerState);
   timerState.innerText = '0';
 
   const flagsCounter = document.createElement('div');
@@ -100,18 +110,18 @@ function renderPage(gridSize) {
   minesCounter.append(minesCounterState);
   minesCounterState.innerText = gridSize;
 
-  const movesCounter = document.createElement('div');
-  movesCounter.className = 'grid-header__moves-counter moves-counter';
-  gridHeader.append(movesCounter);
+  const movesCounterElement = document.createElement('div');
+  movesCounterElement.className = 'grid-header__moves-counter moves-counter';
+  gridHeader.append(movesCounterElement);
 
   const movesCounterDescription = document.createElement('span');
   movesCounterDescription.className = 'moves-counter__descr';
-  movesCounter.append(movesCounterDescription);
+  movesCounterElement.append(movesCounterDescription);
   movesCounterDescription.innerText = 'moves:';
 
   const movesCounterState = document.createElement('div');
   movesCounterState.className = 'moves-counter__state';
-  movesCounter.append(movesCounterState);
+  movesCounterElement.append(movesCounterState);
   movesCounterState.innerText = '0';
 
   const gridElement = document.createElement('div');
@@ -122,23 +132,19 @@ function renderPage(gridSize) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  localStorage.clear();
+  counters.addTickHandler(tickHandler);
+  counters.addMoveHandler(movesHandler);
+
   const gridSize = 10;
   grid.init(gridSize);
   renderPage(gridSize);
-  let isGameStarted = false;
 
   const gridElement = document.querySelector('.grid');
   gridElement.addEventListener('click', (event) => {
     const y = +event.target.getAttribute('y');
     const x = +event.target.getAttribute('x');
-    if (!isGameStarted) {
-      grid.setMines(gridSize, y, x);
-      grid.openCell(y, x);
-      renderGrid();
-      isGameStarted = true;
-    } else {
-      grid.openCell(y, x);
-      renderGrid();
-    }
+    game.openCell(x, y);
+    renderGrid();
   });
 });

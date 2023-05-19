@@ -64,10 +64,15 @@ function setMines(minesNum, startY, startX) {
 
 const get = () => storage.getGrid();
 
-function openCell(y, x) {
+function openCell(x, y) {
   const gridData = storage.getGrid();
   gridData[y][x].state = State.Opened;
   storage.setGrid(gridData);
+}
+
+function isMine(x, y) {
+  const gridData = storage.getGrid();
+  return gridData[y][x].isMine;
 }
 
 export default {
@@ -75,4 +80,5 @@ export default {
   setMines,
   get,
   openCell,
+  isMine,
 };
