@@ -76,38 +76,34 @@
   font-weight: bold;
 }
 
-.grid__cell:active {
-  border: 2px solid rgba(0, 0, 0, 0.368);
-}
 
-.grid__cell[is-number='true'],
-.grid__cell[is-mine='true'] {
+.grid__cell[clicked='true'] {
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
-.grid__cell[is-mine='true'] {
+.grid__cell[is-mine='true'][clicked='true'] {
   background-image: url('assets/icons/bomb-svgrepo-com\ \(2\).svg');
   background-size: 50%;
   background-repeat: no-repeat;
-  background-position:center;
+  background-position: center;
 }
 
-.grid__cell[number='1'] {
+.grid__cell[number='1'][clicked='true'] {
   color: blue;
 }
 
-.grid__cell[number='2'] {
+.grid__cell[number='2'][clicked='true'] {
   color: green;
 }
 
-.grid__cell[number='3'] {
+.grid__cell[number='3'][clicked='true'] {
   color: red;
 }
 
-.grid__cell[number='4'] {
+.grid__cell[number='4'][clicked='true'] {
   color: rgb(5, 5, 141);
 }
 
-.grid__cell[number='5'] {
+.grid__cell[number='5'][clicked='true'] {
   color: rgb(145, 5, 5);
 }

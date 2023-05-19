@@ -1,4 +1,5 @@
 import grid from './modules/grid.js';
+import State from './modules/state.js';
 
 function removeGrid() {
   const cells = document.querySelectorAll('.grid__cell');
@@ -16,21 +17,27 @@ function renderGrid() {
 
   for (let y = 0; y < gridData.length; y += 1) {
     for (let x = 0; x < gridData[y].length; x += 1) {
-      const cell = document.createElement('div');
-      cell.className = 'grid__cell';
-      if (gridData[y][x].isMine) {
-        cell.setAttribute('is-mine', true);
-      } else if (!gridData[y][x].isMine && gridData[y][x].mineCount > 0) {
-        cell.innerText = `${gridData[y][x].mineCount}`;
-        cell.setAttribute('is-number', true);
-        cell.setAttribute('number', `${gridData[y][x].mineCount}`);
+      const cell = gridData[y][x];
+      const cellElement = document.createElement('div');
+      cellElement.className = 'grid__cell';
+      if (cell.isMine) {
+        cellElement.setAttribute('is-mine', true);
+      } else if (!cell.isMine && cell.mineCount > 0) {
+        cellElement.innerText = cell.state === State.Opened ? `${cell.mineCount}` : '';
+        cellElement.setAttribute('is-number', true);
+        cellElement.setAttribute('number', `${cell.mineCount}`);
       } else {
-        cell.setAttribute('empty', true);
+        cellElement.setAttribute('empty', true);
       }
 
-      cell.setAttribute('x', x);
-      cell.setAttribute('y', y);
-      gridElement.append(cell);
+      if (cell.state === State.Opened) {
+        cellElement.setAttribute('clicked', true);
+      }
+
+      cellElement.setAttribute('y', y);
+      cellElement.setAttribute('x', x);
+
+      gridElement.append(cellElement);
     }
   }
 }
@@ -122,13 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const gridElement = document.querySelector('.grid');
   gridElement.addEventListener('click', (event) => {
-    const x = event.target.getAttribute('x');
-    const y = event.target.getAttribute('y');
+    const y = +event.target.getAttribute('y');
+    const x = +event.target.getAttribute('x');
     if (!isGameStarted) {
-      grid.setMines(gridSize, x, y);
+      grid.setMines(gridSize, y, x);
+      grid.openCell(y, x);
       renderGrid();
       isGameStarted = true;
     } else {
+      grid.openCell(y, x);
       renderGrid();
     }
   });

@@ -7,9 +7,9 @@ function getRandomNumber(number) {
 
 function init(size) {
   const grid = [];
-  for (let i = 0; i < size; i += 1) {
+  for (let y = 0; y < size; y += 1) {
     const cellsRow = [];
-    for (let j = 0; j < size; j += 1) {
+    for (let x = 0; x < size; x += 1) {
       cellsRow.push({ isMine: false, mineCount: 0, state: State.Closed });
     }
     grid.push(cellsRow);
@@ -18,44 +18,44 @@ function init(size) {
   storage.setGrid(grid);
 }
 
-function setMines(minesNum, startX, startY) {
+function setMines(minesNum, startY, startX) {
   const grid = storage.getGrid();
   let minesCount = 0;
 
   while (minesCount < minesNum) {
-    const x = getRandomNumber(minesNum);
     const y = getRandomNumber(minesNum);
-    const cell = grid[x][y];
+    const x = getRandomNumber(minesNum);
+    const cell = grid[y][x];
 
     if (!cell.isMine && x !== startX && y !== startY) {
       cell.isMine = true;
       minesCount += 1;
 
-      if (grid[x - 1] && grid[y + 1] && !grid[x - 1][y + 1].isMine) {
-        grid[x - 1][y + 1].mineCount += 1;
+      if (grid[y - 1] && grid[x + 1] && !grid[y - 1][x + 1].isMine) {
+        grid[y - 1][x + 1].mineCount += 1;
       }
-      if (grid[x - 1] && !grid[x - 1][y].isMine) {
-        grid[x - 1][y].mineCount += 1;
+      if (grid[y - 1] && !grid[y - 1][x].isMine) {
+        grid[y - 1][x].mineCount += 1;
       }
-      if (grid[x - 1] && grid[y - 1] && !grid[x - 1][y - 1].isMine) {
-        grid[x - 1][y - 1].mineCount += 1;
-      }
-
-      if (grid[x] && grid[y + 1] && !grid[x][y + 1].isMine) {
-        grid[x][y + 1].mineCount += 1;
-      }
-      if (grid[x] && grid[y - 1] && !grid[x][y - 1].isMine) {
-        grid[x][y - 1].mineCount += 1;
+      if (grid[y - 1] && grid[x - 1] && !grid[y - 1][x - 1].isMine) {
+        grid[y - 1][x - 1].mineCount += 1;
       }
 
-      if (grid[x + 1] && grid[y + 1] && !grid[x + 1][y + 1].isMine) {
-        grid[x + 1][y + 1].mineCount += 1;
+      if (grid[y] && grid[x + 1] && !grid[y][x + 1].isMine) {
+        grid[y][x + 1].mineCount += 1;
       }
-      if (grid[x + 1] && !grid[x + 1][y].isMine) {
-        grid[x + 1][y].mineCount += 1;
+      if (grid[y] && grid[x - 1] && !grid[y][x - 1].isMine) {
+        grid[y][x - 1].mineCount += 1;
       }
-      if (grid[x + 1] && grid[y - 1] && !grid[x + 1][y - 1].isMine) {
-        grid[x + 1][y - 1].mineCount += 1;
+
+      if (grid[y + 1] && grid[x + 1] && !grid[y + 1][x + 1].isMine) {
+        grid[y + 1][x + 1].mineCount += 1;
+      }
+      if (grid[y + 1] && !grid[y + 1][x].isMine) {
+        grid[y + 1][x].mineCount += 1;
+      }
+      if (grid[y + 1] && grid[x - 1] && !grid[y + 1][x - 1].isMine) {
+        grid[y + 1][x - 1].mineCount += 1;
       }
     }
   }
@@ -64,8 +64,15 @@ function setMines(minesNum, startX, startY) {
 
 const get = () => storage.getGrid();
 
+function openCell(y, x) {
+  const gridData = storage.getGrid();
+  gridData[y][x].state = State.Opened;
+  storage.setGrid(gridData);
+}
+
 export default {
   init,
   setMines,
   get,
+  openCell,
 };
