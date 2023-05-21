@@ -24,11 +24,11 @@ const leftClickHandler = (x, y) => {
   }
 };
 
-function rightClickHandler(isFlaged, x, y) {
+const rightClickHandler = (isFlaged, x, y) => {
   if (!isStarted) return;
   grid.setFlag(isFlaged, x, y);
   counters.countFlags(isFlaged);
-}
+};
 
 export default {
   leftClickHandler,

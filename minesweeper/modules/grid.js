@@ -1,11 +1,11 @@
 import storage from './storage.js';
 import State from './state.js';
 
-function getRandomNumber(number) {
-  return Math.floor(Math.random() * ((number - 1) - 0 + 1) + 0);
-}
+const getRandomNumber = (number) => Math.floor(Math.random() * ((number - 1) - 0 + 1) + 0);
 
-function init(size) {
+const get = () => storage.getGrid();
+
+const init = (size) => {
   const grid = [];
   for (let y = 0; y < size; y += 1) {
     const cellsRow = [];
@@ -16,9 +16,35 @@ function init(size) {
   }
 
   storage.setGrid(grid);
-}
+};
 
-function setMines(minesNum, startY, startX) {
+const getClosestCoordinates = (x, y) => {
+  const size = 10;
+  const closestCoordinates = [];
+
+  closestCoordinates.push([x - 1, y - 1]);
+  closestCoordinates.push([x - 1, y]);
+  closestCoordinates.push([x - 1, y + 1]);
+
+  closestCoordinates.push([x + 1, y - 1]);
+  closestCoordinates.push([x + 1, y]);
+  closestCoordinates.push([x + 1, y + 1]);
+
+  closestCoordinates.push([x, y - 1]);
+  closestCoordinates.push([x, y + 1]);
+
+  return closestCoordinates.filter((coordinate) => coordinate[0] >= 0
+    && coordinate[0] < size
+    && coordinate[1] >= 0
+    && coordinate[1] < size);
+};
+
+const isMine = (x, y) => {
+  const gridData = storage.getGrid();
+  return gridData[y][x].isMine;
+};
+
+const setMines = (minesNum, startY, startX) => {
   const grid = storage.getGrid();
   let minesCount = 0;
 
@@ -31,46 +57,26 @@ function setMines(minesNum, startY, startX) {
       cell.isMine = true;
       minesCount += 1;
 
-      if (grid[y - 1] && grid[x + 1] && !grid[y - 1][x + 1].isMine) {
-        grid[y - 1][x + 1].mineCount += 1;
-      }
-      if (grid[y - 1] && !grid[y - 1][x].isMine) {
-        grid[y - 1][x].mineCount += 1;
-      }
-      if (grid[y - 1] && grid[x - 1] && !grid[y - 1][x - 1].isMine) {
-        grid[y - 1][x - 1].mineCount += 1;
-      }
+      const closest = getClosestCoordinates(x, y);
 
-      if (grid[y] && grid[x + 1] && !grid[y][x + 1].isMine) {
-        grid[y][x + 1].mineCount += 1;
-      }
-      if (grid[y] && grid[x - 1] && !grid[y][x - 1].isMine) {
-        grid[y][x - 1].mineCount += 1;
-      }
-
-      if (grid[y + 1] && grid[x + 1] && !grid[y + 1][x + 1].isMine) {
-        grid[y + 1][x + 1].mineCount += 1;
-      }
-      if (grid[y + 1] && !grid[y + 1][x].isMine) {
-        grid[y + 1][x].mineCount += 1;
-      }
-      if (grid[y + 1] && grid[x - 1] && !grid[y + 1][x - 1].isMine) {
-        grid[y + 1][x - 1].mineCount += 1;
+      for (let i = 0; i < closest.length; i += 1) {
+        const [closestX, closestY] = closest[i];
+        if (!grid[closestY][closestX].isMine) {
+          grid[closestY][closestX].mineCount += 1;
+        }
       }
     }
   }
   storage.setGrid(grid);
-}
+};
 
-const get = () => storage.getGrid();
-
-function openCell(x, y) {
+const openCell = (x, y) => {
   const gridData = storage.getGrid();
   gridData[y][x].state = State.Opened;
   storage.setGrid(gridData);
-}
+};
 
-function setFlag(isFlaged, x, y) {
+const setFlag = (isFlaged, x, y) => {
   const gridData = storage.getGrid();
   if (!isFlaged) {
     gridData[y][x].state = State.Flaged;
@@ -78,12 +84,7 @@ function setFlag(isFlaged, x, y) {
     gridData[y][x].state = State.Closed;
   }
   storage.setGrid(gridData);
-}
-
-function isMine(x, y) {
-  const gridData = storage.getGrid();
-  return gridData[y][x].isMine;
-}
+};
 
 export default {
   init,

@@ -3,26 +3,26 @@ import game from './modules/game.js';
 import counters from './modules/counters.js';
 import State from './modules/state.js';
 
-function tickHandler(seconds) {
+const tickHandler = (seconds) => {
   document.querySelector('.timer__state').innerText = seconds;
-}
+};
 
-function movesHandler(moves) {
+const movesHandler = (moves) => {
   document.querySelector('.moves-counter__state').innerText = moves;
-}
+};
 
-function flagsHandler(flags) {
+const flagsHandler = (flags) => {
   document.querySelector('.flags-counter__state').innerText = flags;
-}
+};
 
-function removeGrid() {
+const removeGrid = () => {
   const cells = document.querySelectorAll('.grid__cell');
   cells.forEach((cell) => {
     cell.remove();
   });
-}
+};
 
-function renderGrid() {
+const renderGrid = () => {
   removeGrid();
 
   const gridElement = document.querySelector('.grid');
@@ -58,9 +58,9 @@ function renderGrid() {
       gridElement.append(cellElement);
     }
   }
-}
+};
 
-function renderPopup(isWin, seconds, moves) {
+const renderPopup = (isWin, seconds, moves) => {
   const body = document.querySelector('body');
   body.className = 'body';
   body.classList.add(isWin ? 'body_colored-win' : 'body_colored-loose');
@@ -95,9 +95,9 @@ function renderPopup(isWin, seconds, moves) {
   const popupBtnClose = document.createElement('button');
   popupBtnClose.className = 'popup-container__btn popup-btn-close';
   popupContainer.append(popupBtnClose);
-}
+};
 
-function renderPage(gridSize) {
+const renderPage = (gridSize) => {
   const mainContainer = document.createElement('main');
   mainContainer.className = 'main-container';
   document.body.append(mainContainer);
@@ -174,7 +174,7 @@ function renderPage(gridSize) {
   gridContainer.append(gridElement);
 
   renderGrid(gridElement);
-}
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   localStorage.clear();
