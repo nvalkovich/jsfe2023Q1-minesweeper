@@ -52,6 +52,43 @@ function renderGrid() {
   }
 }
 
+function renderPopup(isWin, seconds, moves) {
+  const body = document.querySelector('body');
+  body.className = 'body';
+  body.classList.add(isWin ? 'body_colored-win' : 'body_colored-loose');
+
+  const popupWrapper = document.createElement('div');
+  popupWrapper.className = 'popup-wrapper popup-wrapper_active';
+  document.body.append(popupWrapper);
+
+  const popupContainer = document.createElement('div');
+  popupContainer.className = 'popup-container';
+  popupWrapper.append(popupContainer);
+
+  const popupContent = document.createElement('div');
+  popupContent.className = 'popup-container__content popup-content';
+  popupContent.classList.add(isWin ? 'popup-content_win' : 'popup-content_loose');
+  popupContainer.append(popupContent);
+
+  const popupMessage = document.createElement('h3');
+  popupMessage.className = 'popup-content__message';
+  popupContent.append(popupMessage);
+  popupMessage.innerText = isWin ? `Hooray! You found all mines in ${seconds} seconds and ${moves} moves!` : 'Game over. Try again';
+
+  const popupImage = document.createElement('div');
+  popupImage.className = 'popup-content__img';
+  popupContent.append(popupImage);
+
+  const popupBtn = document.createElement('button');
+  popupBtn.className = 'popup-content__btn';
+  popupContent.append(popupBtn);
+  popupBtn.innerText = 'start new game';
+
+  const popupBtnClose = document.createElement('button');
+  popupBtnClose.className = 'popup-container__btn popup-btn-close';
+  popupContainer.append(popupBtnClose);
+}
+
 function renderPage(gridSize) {
   const mainContainer = document.createElement('main');
   mainContainer.className = 'main-container';

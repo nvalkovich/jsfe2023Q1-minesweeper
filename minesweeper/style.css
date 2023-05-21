@@ -2,11 +2,24 @@
   box-sizing: border-box;
 }
 
+.body {
+  position: relative;
+}
+
+.body_colored-loose {
+  background-color: #c90707be;
+}
+
+.body_colored-win {
+  background-color: #09a313f5;
+}
+
 .grid-container {
+  position: relative;
   max-width: 503px;
   margin: 50px auto;
   border: 1px solid #cecece;
-  background-color: #dcdcdc2e;
+  background-color: #dcdcdc;
   box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
 }
 
@@ -59,15 +72,26 @@
   justify-content: center;
 }
 
-.grid__cell {
-  width: 50px;
-  height: 50px;
-  background-color: #bfbfbf93;
-  color: black;
+.grid__cell,
+.popup-container,
+.popup-content__btn,
+.popup-btn-close {
   border-bottom: 4px solid #7B7B7B;
   border-left: 4px solid #ffffff;
   border-top: 4px solid #ffffff;
   border-right: 4px solid #7B7B7B;
+}
+
+.grid__cell,
+.popup-content__btn,
+.popup-btn-close {
+  background-color: #bfbfbf93;
+}
+
+.grid__cell {
+  width: 50px;
+  height: 50px;
+  color: black;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -106,4 +130,109 @@
 
 .grid__cell[number='5'][clicked='true'] {
   color: rgb(145, 5, 5);
+}
+
+.popup-wrapper {
+  display: none;
+}
+
+.popup-wrapper_active {
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  z-index: 100;
+  transition: 0.4s;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.popup-container {
+  font-size: 20px;
+  max-width: 460px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  background-color: #e9e4e4;
+  color: black;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 95%;
+}
+
+.popup-content_win {
+  padding-left: 70px;
+}
+
+.popup-content_loose {
+  padding-left: 60px;
+}
+
+.popup-content__img {
+  width: 100px;
+  height: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-content_win>.popup-content__img {
+  background-image: url('assets/icons/medal-reward-svgrepo-com.svg');
+  background-size: 70%;
+}
+
+.popup-content_loose>.popup-content__img {
+  background-image: url('assets/icons/refresh-svgrepo-com.svg');
+  background-size: 60%;
+}
+
+.popup-content__btn {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+  width: 300px;
+  height: 50px;
+  color: black;
+}
+
+.popup-content_win+.popup-btn-close {
+  margin: 10px 10px 10px 45px;
+}
+
+.popup-content_loose+.popup-btn-close {
+  margin: 10px 10px 10px 25px;
+}
+
+.popup-btn-close {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+  width: 30px;
+  height: 28px;
+  color: black;
+  background-image: url('assets/icons/cross-close-svgrepo-com.svg');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.popup-content_win>.popup-content__btn {
+  margin-bottom: 25px;
+  margin-top: 20px;
+}
+
+.popup-content_loose>.popup-content__btn {
+  margin-top: 10px;
+  margin-bottom: 25px;
 }
