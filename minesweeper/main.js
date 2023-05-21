@@ -15,6 +15,10 @@ const flagsHandler = (flags) => {
   document.querySelector('.flags-counter__state').innerText = flags;
 };
 
+const minesHandler = (mines) => {
+  document.querySelector('.mines-counter__state').innerText = mines;
+};
+
 const removeGrid = () => {
   const cells = document.querySelectorAll('.grid__cell');
   cells.forEach((cell) => {
@@ -181,8 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
   counters.addTickHandler(tickHandler);
   counters.addMoveHandler(movesHandler);
   counters.addFlagsHandler(flagsHandler);
+  counters.addMinesHandler(minesHandler);
 
   const gridSize = 10;
+  const defaultMinesNum = 10;
   grid.init(gridSize);
   renderPage(gridSize);
 
@@ -198,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (event.button === 0) {
       if (event.target.getAttribute('flaged')) return;
-      game.leftClickHandler(x, y);
+      game.leftClickHandler(defaultMinesNum, x, y);
     } else if (event.button === 2) {
       if (event.target.getAttribute('clicked')) return;
       const isFlaged = event.target.getAttribute('flaged');

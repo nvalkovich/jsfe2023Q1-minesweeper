@@ -67,6 +67,7 @@ const setMines = (minesNum, startY, startX) => {
       }
     }
   }
+  storage.setMines(minesCount);
   storage.setGrid(grid);
 };
 
