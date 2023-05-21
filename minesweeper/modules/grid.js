@@ -70,11 +70,31 @@ const setMines = (minesNum, startY, startX) => {
   storage.setGrid(grid);
 };
 
-const openCell = (x, y) => {
+function openCell(x, y) {
   const gridData = storage.getGrid();
-  gridData[y][x].state = State.Opened;
-  storage.setGrid(gridData);
-};
+  const cell = gridData[y][x];
+
+  if (cell.state === State.Opened || cell.state === State.Flaged) {
+    return;
+  }
+
+  if (cell.isMine || cell.mineCount > 0) {
+    cell.state = State.Opened;
+    storage.setGrid(gridData);
+    return;
+  }
+
+  if (cell.mineCount === 0) {
+    cell.state = State.Opened;
+    storage.setGrid(gridData);
+
+    const closest = getClosestCoordinates(x, y);
+    for (let i = 0; i < closest.length; i += 1) {
+      const [closestX, closestY] = closest[i];
+      openCell(closestX, closestY);
+    }
+  }
+}
 
 const setFlag = (isFlaged, x, y) => {
   const gridData = storage.getGrid();
