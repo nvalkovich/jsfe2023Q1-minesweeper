@@ -3,6 +3,7 @@ import storage from './storage.js';
 let timer = null;
 let tickCallback = null;
 let movesCallback = null;
+let flagsCallback = null;
 
 const startTimer = () => {
   timer = setInterval(() => {
@@ -22,6 +23,12 @@ const addMove = () => {
   movesCallback(moves);
 };
 
+const countFlags = (isFlaged) => {
+  const flags = isFlaged ? storage.getFlags() - 1 : storage.getFlags() + 1;
+  storage.setFlags(flags);
+  flagsCallback(flags);
+};
+
 const reset = () => {
   stopTimer();
   storage.setTime(0);
@@ -38,6 +45,10 @@ const addMoveHandler = (callback) => {
   movesCallback = callback;
 };
 
+const addFlagsHandler = (callback) => {
+  flagsCallback = callback;
+};
+
 export default {
   startTimer,
   stopTimer,
@@ -45,4 +56,6 @@ export default {
   reset,
   addTickHandler,
   addMoveHandler,
+  addFlagsHandler,
+  countFlags,
 };

@@ -11,6 +11,10 @@ function movesHandler(moves) {
   document.querySelector('.moves-counter__state').innerText = moves;
 }
 
+function flagsHandler(flags) {
+  document.querySelector('.flags-counter__state').innerText = flags;
+}
+
 function removeGrid() {
   const cells = document.querySelectorAll('.grid__cell');
   cells.forEach((cell) => {
@@ -42,8 +46,12 @@ function renderGrid() {
 
       if (cell.state === State.Opened) {
         cellElement.setAttribute('clicked', true);
+      } else if (cell.state === State.Flaged) {
+        cellElement.setAttribute('flaged', true);
+      } else if (cell.state === State.Closed) {
+        cellElement.removeAttribute('clicked');
+        cellElement.removeAttribute('flaged');
       }
-
       cellElement.setAttribute('y', y);
       cellElement.setAttribute('x', x);
 
@@ -172,16 +180,30 @@ document.addEventListener('DOMContentLoaded', () => {
   localStorage.clear();
   counters.addTickHandler(tickHandler);
   counters.addMoveHandler(movesHandler);
+  counters.addFlagsHandler(flagsHandler);
 
   const gridSize = 10;
   grid.init(gridSize);
   renderPage(gridSize);
 
+  window.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+  });
+
   const gridElement = document.querySelector('.grid');
-  gridElement.addEventListener('click', (event) => {
+  gridElement.addEventListener('mousedown', (event) => {
+    event.preventDefault();
     const y = +event.target.getAttribute('y');
     const x = +event.target.getAttribute('x');
-    game.openCell(x, y);
+
+    if (event.button === 0) {
+      if (event.target.getAttribute('flaged')) return;
+      game.leftClickHandler(x, y);
+    } else if (event.button === 2) {
+      if (event.target.getAttribute('clicked')) return;
+      const isFlaged = event.target.getAttribute('flaged');
+      game.rightClickHandler(isFlaged, x, y);
+    }
     renderGrid();
   });
 });

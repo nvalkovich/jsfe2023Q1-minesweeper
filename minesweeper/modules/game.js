@@ -3,7 +3,7 @@ import counters from './counters.js';
 
 let isStarted = false;
 
-const openCell = (x, y) => {
+const leftClickHandler = (x, y) => {
   if (!isStarted) {
     grid.init(10);
     grid.setMines(10, y, x);
@@ -24,6 +24,13 @@ const openCell = (x, y) => {
   }
 };
 
+function rightClickHandler(isFlaged, x, y) {
+  if (!isStarted) return;
+  grid.setFlag(isFlaged, x, y);
+  counters.countFlags(isFlaged);
+}
+
 export default {
-  openCell,
+  leftClickHandler,
+  rightClickHandler,
 };

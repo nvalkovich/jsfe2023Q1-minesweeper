@@ -1,6 +1,7 @@
 const gridKey = 'grid';
 const timeKey = 'time';
 const movesKey = 'moves';
+const flagsKey = 'flags';
 
 const setGrid = (grid) => localStorage.setItem(gridKey, JSON.stringify(grid));
 
@@ -14,6 +15,10 @@ const setMoves = (moves) => localStorage.setItem(movesKey, moves);
 
 const getMoves = () => +localStorage.getItem(movesKey);
 
+const setFlags = (flags) => localStorage.setItem(flagsKey, flags);
+
+const getFlags = () => +localStorage.getItem(flagsKey);
+
 export default {
   setGrid,
   getGrid,
@@ -21,4 +26,6 @@ export default {
   getTime,
   setMoves,
   getMoves,
+  setFlags,
+  getFlags,
 };

@@ -85,7 +85,7 @@
 .grid__cell,
 .popup-content__btn,
 .popup-btn-close {
-  background-color: #bfbfbf93;
+  background-color: #c1bfbf;
 }
 
 .grid__cell {
@@ -100,9 +100,16 @@
   font-weight: bold;
 }
 
+.grid__cell[flaged='true'] {
+  background-image: url('assets/icons/flag-maps-and-flags-svgrepo-com.svg');
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 .grid__cell[clicked='true'] {
   border: 2px solid rgba(0, 0, 0, 0.1);
+  background-color: #bdbdbd;
 }
 
 .grid__cell[is-mine='true'][clicked='true'] {

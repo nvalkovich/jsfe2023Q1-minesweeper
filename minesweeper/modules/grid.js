@@ -70,6 +70,16 @@ function openCell(x, y) {
   storage.setGrid(gridData);
 }
 
+function setFlag(isFlaged, x, y) {
+  const gridData = storage.getGrid();
+  if (!isFlaged) {
+    gridData[y][x].state = State.Flaged;
+  } else {
+    gridData[y][x].state = State.Closed;
+  }
+  storage.setGrid(gridData);
+}
+
 function isMine(x, y) {
   const gridData = storage.getGrid();
   return gridData[y][x].isMine;
@@ -81,4 +91,5 @@ export default {
   get,
   openCell,
   isMine,
+  setFlag,
 };
