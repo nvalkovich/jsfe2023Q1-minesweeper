@@ -6,28 +6,24 @@
   position: relative;
 }
 
-.body_colored-loose {
-  background-color: #c90707be;
-}
-
-.body_colored-win {
-  background-color: #09a313f5;
-}
-
-.grid-container {
+.game-container {
   position: relative;
-  max-width: 503px;
+  max-width: 700px;
   margin: 50px auto;
   border: 1px solid #cecece;
   background-color: #dcdcdc;
   box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.grid-container__header {
+.game-header {
   height: 100px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  gap: 30px;
+  margin: 0 auto;
 }
 
 .timer,
@@ -64,18 +60,28 @@
   background-image: url('assets/icons/bomb-svgrepo-com\ \(2\).svg');
 }
 
-.grid-container__grid {
+.game-field {
+  margin: 0 auto;
+  max-width: 600px;
+  background-color: rgba(0, 0, 0, 0.368);
+}
+
+.game-field__grid {
+  max-width: 450px;
+  max-height: 450px;
   height: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  margin: 20px;
 }
 
 .grid__cell,
 .popup-container,
 .popup-content__btn,
-.popup-btn-close {
+.popup-btn-close,
+.actions__btn {
   border-bottom: 4px solid #7B7B7B;
   border-left: 4px solid #ffffff;
   border-top: 4px solid #ffffff;
@@ -84,13 +90,14 @@
 
 .grid__cell,
 .popup-content__btn,
-.popup-btn-close {
+.popup-btn-close,
+.actions__btn {
   background-color: #c1bfbf;
 }
 
 .grid__cell {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   color: black;
   cursor: pointer;
   display: flex;
@@ -107,35 +114,45 @@
   background-position: center;
 }
 
-.grid__cell[clicked='true'] {
+.grid__cell[opened='true'] {
   border: 2px solid rgba(0, 0, 0, 0.1);
   background-color: #bdbdbd;
 }
 
-.grid__cell[is-mine='true'][clicked='true'] {
+.grid__cell[is-mine='true'][opened='true'],
+.grid__cell[clicked-mine='true'] {
+  border: 2px solid rgba(0, 0, 0, 0.1);
   background-image: url('assets/icons/bomb-svgrepo-com\ \(2\).svg');
   background-size: 50%;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.grid__cell[number='1'][clicked='true'] {
+.grid__cell[is-mine='true'][opened='true'] {
+  background-color: #bdbdbd;
+}
+
+.grid__cell[clicked-mine='true'] {
+  background-color: #c907078c;
+}
+
+.grid__cell[number='1'][opened='true'] {
   color: blue;
 }
 
-.grid__cell[number='2'][clicked='true'] {
+.grid__cell[number='2'][opened='true'] {
   color: green;
 }
 
-.grid__cell[number='3'][clicked='true'] {
+.grid__cell[number='3'][opened='true'] {
   color: red;
 }
 
-.grid__cell[number='4'][clicked='true'] {
+.grid__cell[number='4'][opened='true'] {
   color: rgb(5, 5, 141);
 }
 
-.grid__cell[number='5'][clicked='true'] {
+.grid__cell[number='5'][opened='true'] {
   color: rgb(145, 5, 5);
 }
 
@@ -163,9 +180,9 @@
   display: flex;
   flex-direction: row;
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -40%);
+  transform: translate(-50%, -50%);
   background-color: #e9e4e4;
   color: black;
 }
@@ -183,7 +200,7 @@
   padding-left: 70px;
 }
 
-.popup-content_loose {
+.popup-content_loss {
   padding-left: 60px;
 }
 
@@ -199,7 +216,7 @@
   background-size: 70%;
 }
 
-.popup-content_loose>.popup-content__img {
+.popup-content_loss>.popup-content__img {
   background-image: url('assets/icons/refresh-svgrepo-com.svg');
   background-size: 60%;
 }
@@ -217,13 +234,13 @@
   margin: 10px 10px 10px 45px;
 }
 
-.popup-content_loose+.popup-btn-close {
+.popup-content_loss+.popup-btn-close {
   margin: 10px 10px 10px 25px;
 }
 
 .popup-btn-close {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   width: 30px;
   height: 28px;
@@ -234,12 +251,37 @@
   background-position: center;
 }
 
+.popup-content__btn:active,
+.popup-btn-close:active,
+.actions__btn:active {
+  background-size: 60%;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
 .popup-content_win>.popup-content__btn {
   margin-bottom: 25px;
   margin-top: 20px;
 }
 
-.popup-content_loose>.popup-content__btn {
+.popup-content_loss>.popup-content__btn {
   margin-top: 10px;
   margin-bottom: 25px;
+}
+
+.game-actions {
+  margin: 0 auto;
+  max-width: 600px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 30px;
+}
+
+.actions__btn {
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
 }

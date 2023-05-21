@@ -26,6 +26,13 @@ const removeGrid = () => {
   });
 };
 
+const disableCells = () => {
+  const cells = document.querySelectorAll('.grid__cell');
+  for (let i = 0; i < cells.length; i += 1) {
+    cells[i].disabled = true;
+  }
+};
+
 const renderGrid = () => {
   removeGrid();
 
@@ -36,7 +43,7 @@ const renderGrid = () => {
   for (let y = 0; y < gridData.length; y += 1) {
     for (let x = 0; x < gridData[y].length; x += 1) {
       const cell = gridData[y][x];
-      const cellElement = document.createElement('div');
+      const cellElement = document.createElement('button');
       cellElement.className = 'grid__cell';
       if (cell.isMine) {
         cellElement.setAttribute('is-mine', true);
@@ -49,13 +56,16 @@ const renderGrid = () => {
       }
 
       if (cell.state === State.Opened) {
-        cellElement.setAttribute('clicked', true);
+        cellElement.setAttribute('opened', true);
       } else if (cell.state === State.Flaged) {
         cellElement.setAttribute('flaged', true);
       } else if (cell.state === State.Closed) {
-        cellElement.removeAttribute('clicked');
+        cellElement.removeAttribute('opened');
         cellElement.removeAttribute('flaged');
+      } else {
+        cellElement.setAttribute('clicked-mine', true);
       }
+
       cellElement.setAttribute('y', y);
       cellElement.setAttribute('x', x);
 
@@ -64,10 +74,11 @@ const renderGrid = () => {
   }
 };
 
-const renderPopup = (isWin, seconds, moves) => {
-  const body = document.querySelector('body');
-  body.className = 'body';
-  body.classList.add(isWin ? 'body_colored-win' : 'body_colored-loose');
+const renderPopup = (isMineClicked, time, moves, x, y) => {
+  if (isMineClicked) {
+    grid.showAllMines(x, y);
+    renderGrid();
+  }
 
   const popupWrapper = document.createElement('div');
   popupWrapper.className = 'popup-wrapper popup-wrapper_active';
@@ -79,13 +90,15 @@ const renderPopup = (isWin, seconds, moves) => {
 
   const popupContent = document.createElement('div');
   popupContent.className = 'popup-container__content popup-content';
-  popupContent.classList.add(isWin ? 'popup-content_win' : 'popup-content_loose');
+  popupContent.classList.add(isMineClicked ? 'popup-content_loss' : 'popup-content_win');
   popupContainer.append(popupContent);
 
   const popupMessage = document.createElement('h3');
   popupMessage.className = 'popup-content__message';
   popupContent.append(popupMessage);
-  popupMessage.innerText = isWin ? `Hooray! You found all mines in ${seconds} seconds and ${moves} moves!` : 'Game over. Try again';
+  popupMessage.innerText = isMineClicked
+    ? 'Game over. Try again'
+    : `Hooray! You found all mines in ${time} seconds and ${moves} moves!`;
 
   const popupImage = document.createElement('div');
   popupImage.className = 'popup-content__img';
@@ -94,7 +107,7 @@ const renderPopup = (isWin, seconds, moves) => {
   const popupBtn = document.createElement('button');
   popupBtn.className = 'popup-content__btn';
   popupContent.append(popupBtn);
-  popupBtn.innerText = 'start new game';
+  popupBtn.innerText = 'Start new game';
 
   const popupBtnClose = document.createElement('button');
   popupBtnClose.className = 'popup-container__btn popup-btn-close';
@@ -102,21 +115,24 @@ const renderPopup = (isWin, seconds, moves) => {
 };
 
 const renderPage = (gridSize) => {
+  const body = document.querySelector('body');
+  body.className = 'body';
+
   const mainContainer = document.createElement('main');
   mainContainer.className = 'main-container';
   document.body.append(mainContainer);
 
-  const gridContainer = document.createElement('div');
-  gridContainer.className = 'grid-container';
-  mainContainer.append(gridContainer);
+  const gameContainer = document.createElement('div');
+  gameContainer.className = 'game-container';
+  mainContainer.append(gameContainer);
 
-  const gridHeader = document.createElement('div');
-  gridHeader.className = 'grid-container__header grid-header';
-  gridContainer.append(gridHeader);
+  const gameHeader = document.createElement('div');
+  gameHeader.className = 'game-container__header game-header';
+  gameContainer.append(gameHeader);
 
   const timerElement = document.createElement('div');
-  timerElement.className = 'grid-header__timer timer';
-  gridHeader.append(timerElement);
+  timerElement.className = 'game-header__timer timer';
+  gameHeader.append(timerElement);
 
   const timerDescription = document.createElement('span');
   timerDescription.className = 'timer__descr';
@@ -129,8 +145,8 @@ const renderPage = (gridSize) => {
   timerState.innerText = '0';
 
   const flagsCounter = document.createElement('div');
-  flagsCounter.className = 'grid-header__flags-counter flags-counter';
-  gridHeader.append(flagsCounter);
+  flagsCounter.className = 'game-header__flags-counter flags-counter';
+  gameHeader.append(flagsCounter);
 
   const flagsCounterIcon = document.createElement('div');
   flagsCounterIcon.className = 'flags-counter__icon';
@@ -141,14 +157,14 @@ const renderPage = (gridSize) => {
   flagsCounter.append(flagsCounterState);
   flagsCounterState.innerText = '0';
 
-  const gridHeaderTitle = document.createElement('h2');
-  gridHeaderTitle.className = 'grid-header__title';
-  gridHeader.append(gridHeaderTitle);
-  gridHeaderTitle.innerText = 'Minesweeper';
+  const gameHeaderTitle = document.createElement('h2');
+  gameHeaderTitle.className = 'game-header__title';
+  gameHeader.append(gameHeaderTitle);
+  gameHeaderTitle.innerText = 'Minesweeper';
 
   const minesCounter = document.createElement('div');
-  minesCounter.className = 'grid-header__mines-counter mines-counter';
-  gridHeader.append(minesCounter);
+  minesCounter.className = 'game-header__mines-counter mines-counter';
+  gameHeader.append(minesCounter);
 
   const minesCounterIcon = document.createElement('div');
   minesCounterIcon.className = 'mines-counter__icon';
@@ -160,8 +176,8 @@ const renderPage = (gridSize) => {
   minesCounterState.innerText = gridSize;
 
   const movesCounterElement = document.createElement('div');
-  movesCounterElement.className = 'grid-header__moves-counter moves-counter';
-  gridHeader.append(movesCounterElement);
+  movesCounterElement.className = 'game-header__moves-counter moves-counter';
+  gameHeader.append(movesCounterElement);
 
   const movesCounterDescription = document.createElement('span');
   movesCounterDescription.className = 'moves-counter__descr';
@@ -173,11 +189,28 @@ const renderPage = (gridSize) => {
   movesCounterElement.append(movesCounterState);
   movesCounterState.innerText = '0';
 
-  const gridElement = document.createElement('div');
-  gridElement.className = 'grid-container__grid grid';
-  gridContainer.append(gridElement);
+  const gameField = document.createElement('div');
+  gameField.className = 'game-container__game-field game-field';
+  gameContainer.append(gameField);
 
-  renderGrid(gridElement);
+  const gridElement = document.createElement('div');
+  gridElement.className = 'game-field__grid grid';
+  gameField.append(gridElement);
+
+  const gameActions = document.createElement('div');
+  gameActions.className = 'game-container__actions game-actions';
+  gameContainer.append(gameActions);
+
+  const saveProgressBtn = document.createElement('button');
+  saveProgressBtn.className = 'actions__btn actions__btn_save';
+  gameActions.append(saveProgressBtn);
+  saveProgressBtn.innerText = 'Save progress';
+
+  const newGameBtn = document.createElement('button');
+  newGameBtn.className = 'actions__btn actions__btn_new-game';
+  gameActions.append(newGameBtn);
+  newGameBtn.innerText = 'New game';
+  renderGrid();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -197,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const gridElement = document.querySelector('.grid');
+
   gridElement.addEventListener('mousedown', (event) => {
     event.preventDefault();
     const y = +event.target.getAttribute('y');
@@ -204,12 +238,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (event.button === 0) {
       if (event.target.getAttribute('flaged')) return;
+      const isMine = event.target.getAttribute('is-mine');
+      if (isMine) {
+        game.addGameEndHandler(renderPopup);
+      }
       game.leftClickHandler(defaultMinesNum, x, y);
     } else if (event.button === 2) {
-      if (event.target.getAttribute('clicked')) return;
+      if (event.target.getAttribute('opened')) return;
       const isFlaged = event.target.getAttribute('flaged');
       game.rightClickHandler(isFlaged, x, y);
     }
+    renderGrid();
+  });
+
+  const body = document.querySelector('.body');
+  body.addEventListener('click', (event) => {
+    const clickedElement = event.target;
+    const popupWrapper = document.querySelector('.popup-wrapper');
+    if (clickedElement.classList.contains('popup-btn-close')) {
+      popupWrapper.remove();
+      disableCells();
+    } else if (clickedElement.classList.contains('popup-content__btn')) {
+      game.startNew(defaultMinesNum);
+      popupWrapper.remove();
+      renderGrid();
+    }
+  });
+
+  const startNewGameBtn = document.querySelector('.actions__btn_new-game');
+
+  startNewGameBtn.addEventListener('click', () => {
+    game.startNew(defaultMinesNum);
     renderGrid();
   });
 });

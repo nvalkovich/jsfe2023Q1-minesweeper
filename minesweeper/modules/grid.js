@@ -71,6 +71,24 @@ const setMines = (minesNum, startY, startX) => {
   storage.setGrid(grid);
 };
 
+const showAllMines = (clickedMineX, clickedMineY) => {
+  const gridData = storage.getGrid();
+
+  for (let y = 0; y < gridData.length; y += 1) {
+    for (let x = 0; x < gridData[y].length; x += 1) {
+      const cell = gridData[y][x];
+      if (cell.isMine) {
+        cell.state = State.Opened;
+      }
+      if (clickedMineX === x && clickedMineY === y) {
+        cell.state = State.ClickedMine;
+      }
+    }
+  }
+
+  storage.setGrid(gridData);
+};
+
 function openCell(x, y) {
   const gridData = storage.getGrid();
   const cell = gridData[y][x];
@@ -114,4 +132,5 @@ export default {
   openCell,
   isMine,
   setFlag,
+  showAllMines,
 };

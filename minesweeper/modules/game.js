@@ -1,13 +1,21 @@
 import grid from './grid.js';
 import counters from './counters.js';
+import storage from './storage.js';
+
+let gameEndCallback = null;
 
 let isStarted = false;
 
+const startNew = (defaultMinesNum) => {
+  grid.init(10);
+  counters.reset(defaultMinesNum);
+  isStarted = false;
+};
+
 const leftClickHandler = (defaultMinesNum, x, y) => {
   if (!isStarted) {
-    grid.init(10);
+    startNew(defaultMinesNum);
     grid.setMines(10, y, x);
-    counters.reset(defaultMinesNum);
     counters.startTimer();
     isStarted = true;
   }
@@ -17,11 +25,16 @@ const leftClickHandler = (defaultMinesNum, x, y) => {
   const isMine = grid.isMine(x, y);
 
   if (isMine) {
-    setTimeout(() => alert('Игра окончена. Попробуйте еще раз'), 500);
+    const time = storage.getTime();
+    const moves = storage.getMoves();
+    setTimeout(() => gameEndCallback(isMine, time, moves, x, y), 0);
     counters.stopTimer();
-    grid.init(10);
     isStarted = false;
   }
+};
+
+const addGameEndHandler = (callback) => {
+  gameEndCallback = callback;
 };
 
 const rightClickHandler = (isFlaged, x, y) => {
@@ -34,4 +47,6 @@ const rightClickHandler = (isFlaged, x, y) => {
 export default {
   leftClickHandler,
   rightClickHandler,
+  addGameEndHandler,
+  startNew,
 };
