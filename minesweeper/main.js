@@ -40,12 +40,26 @@ const renderGrid = () => {
   const gridElement = document.querySelector('.grid');
 
   const gridData = grid.get();
+  const size = storage.getSize();
+
+  gridElement.classList.remove('grid_size-easy');
+  gridElement.classList.remove('grid_size-medium');
+  gridElement.classList.remove('grid_size-hard');
+
+  if (size === 10) {
+    gridElement.classList.add('grid_size-easy');
+  } else if (size === 15) {
+    gridElement.classList.add('grid_size-medium');
+  } else if (size === 25) {
+    gridElement.classList.add('grid_size-hard');
+  }
 
   for (let y = 0; y < gridData.length; y += 1) {
     for (let x = 0; x < gridData[y].length; x += 1) {
       const cell = gridData[y][x];
       const cellElement = document.createElement('button');
       cellElement.className = 'grid__cell';
+
       if (cell.isMine) {
         cellElement.setAttribute('is-mine', true);
       } else if (!cell.isMine && cell.mineCount > 0) {
@@ -213,6 +227,86 @@ const renderPage = (gridSize) => {
   newGameBtn.className = 'actions__btn actions__btn_new-game';
   gameActions.append(newGameBtn);
   newGameBtn.innerText = 'New game';
+
+  const setSettingsContainer = document.createElement('div');
+  setSettingsContainer.className = 'actions__settings-container';
+  gameActions.append(setSettingsContainer);
+
+  const setGridSizeContainer = document.createElement('div');
+  setGridSizeContainer.className = 'actions__input-container actions__input-container_size';
+  setSettingsContainer.append(setGridSizeContainer);
+
+  const setGridSize = document.createElement('legend');
+  setGridSize.className = 'actions__legend actions__legend_size';
+  setGridSize.innerText = 'Change size ';
+  setGridSizeContainer.append(setGridSize);
+
+  const setEasySizeInput = document.createElement('input');
+  setEasySizeInput.className = 'actions__input actions__input_size-easy';
+  setEasySizeInput.setAttribute('name', 'size');
+  setEasySizeInput.setAttribute('value', '10');
+  setEasySizeInput.id = 'size-easy';
+  setEasySizeInput.type = 'radio';
+  setGridSizeContainer.append(setEasySizeInput);
+
+  const setEasySizeLabel = document.createElement('label');
+  setEasySizeLabel.className = 'actions__label actions__label_size-easy';
+  setEasySizeLabel.innerText = 'Easy';
+  setEasySizeLabel.setAttribute('for', 'size-easy');
+  setGridSizeContainer.append(setEasySizeLabel);
+
+  const setMediumSizeInput = document.createElement('input');
+  setMediumSizeInput.className = 'actions__input actions__input_size-medium';
+  setMediumSizeInput.setAttribute('name', 'size');
+  setMediumSizeInput.setAttribute('value', '15');
+  setMediumSizeInput.id = 'size-medium';
+  setMediumSizeInput.type = 'radio';
+  setGridSizeContainer.append(setMediumSizeInput);
+
+  const setMediumSizeLabel = document.createElement('label');
+  setMediumSizeLabel.className = 'actions__label actions__label_size-medium';
+  setMediumSizeLabel.innerText = 'Medium';
+  setMediumSizeLabel.setAttribute('for', 'size-medium');
+  setGridSizeContainer.append(setMediumSizeLabel);
+
+  const setHardSizeInput = document.createElement('input');
+  setHardSizeInput.className = 'actions__input actions__input_size-hard';
+  setHardSizeInput.setAttribute('name', 'size');
+  setHardSizeInput.setAttribute('value', '25');
+  setHardSizeInput.id = 'size-hard';
+  setHardSizeInput.type = 'radio';
+  setGridSizeContainer.append(setHardSizeInput);
+
+  const setHardSizeLabel = document.createElement('label');
+  setHardSizeLabel.className = 'actions__label actions__label_size-hard';
+  setHardSizeLabel.innerText = 'Hard';
+  setHardSizeLabel.setAttribute('for', 'size-hard');
+  setGridSizeContainer.append(setHardSizeLabel);
+
+  const setMinesNumContainer = document.createElement('div');
+  setMinesNumContainer.className = 'actions__input-container  actions__input-container_mines';
+  setSettingsContainer.append(setMinesNumContainer);
+
+  const setMinesNumLabel = document.createElement('label');
+  setMinesNumLabel.className = 'actions__label actions__label_mines';
+  setMinesNumLabel.innerText = 'Change number of mines ';
+  setMinesNumLabel.setAttribute('for', 'mines-number');
+  setMinesNumContainer.append(setMinesNumLabel);
+
+  const setMinesNumInput = document.createElement('input');
+  setMinesNumInput.className = 'actions__input actions__input_mines';
+  setMinesNumInput.type = 'number';
+  setMinesNumInput.value = storage.getMines();
+  setMinesNumInput.setAttribute('name', 'mines-number');
+  setMinesNumInput.setAttribute('min', '10');
+  setMinesNumInput.setAttribute('max', '99');
+  setMinesNumContainer.append(setMinesNumInput);
+
+  const applySettingsBtn = document.createElement('button');
+  applySettingsBtn.className = 'actions__settings-btn';
+  applySettingsBtn.innerText = 'Apply settings';
+  setSettingsContainer.append(applySettingsBtn);
+
   renderGrid();
 };
 
@@ -225,8 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
   counters.addMinesHandler(minesHandler);
   game.addGameEndHandler(renderPopup);
 
-  const gridSize = 10;
-  const defaultMinesNum = 10;
+  const gridSize = storage.getSize();
   renderPage(gridSize);
 
   if (isLoaded) {
@@ -250,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (event.button === 0) {
       if (event.target.getAttribute('flaged')) return;
-      game.leftClickHandler(defaultMinesNum, x, y);
+      game.leftClickHandler(x, y);
     } else if (event.button === 2) {
       if (event.target.getAttribute('opened')) return;
       const isFlaged = !!event.target.getAttribute('flaged');
@@ -269,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
       popupWrapper.remove();
       disableCells();
     } else if (clickedElement.classList.contains('popup-content__btn')) {
-      game.startNew(defaultMinesNum);
+      game.startNew();
       popupWrapper.remove();
       gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
       renderGrid();
@@ -279,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startNewGameBtn = document.querySelector('.actions__btn_new-game');
 
   startNewGameBtn.addEventListener('click', () => {
-    game.startNew(defaultMinesNum);
+    game.startNew();
     gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
     renderGrid();
   });
@@ -288,5 +381,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   saveGameBtn.addEventListener('click', () => {
     game.save();
+  });
+
+  const minesNumberInput = document.querySelector('.actions__input_mines');
+
+  const applySettingsBtn = document.querySelector('.actions__settings-btn');
+
+  applySettingsBtn.addEventListener('click', () => {
+    const checkedRadioSize = document.querySelector('input[name="size"]:checked');
+    const size = checkedRadioSize ? checkedRadioSize.value : 10;
+    storage.setSize(size);
+    storage.setMines(minesNumberInput.value);
+
+    game.startNew(+minesNumberInput.value);
+    renderGrid();
   });
 });

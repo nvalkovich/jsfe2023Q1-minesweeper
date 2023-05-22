@@ -5,6 +5,7 @@ const timeKey = 'time';
 const movesKey = 'moves';
 const flagsKey = 'flags';
 const minesKey = 'mines';
+const sizeKey = 'size';
 const isStartedKey = 'isStarted';
 const savedGameKey = 'savedGame';
 
@@ -39,11 +40,23 @@ const getFlags = () => +localStorage.getItem(flagsKey);
 
 const setMines = (mines) => localStorage.setItem(minesKey, mines);
 
-const getMines = () => +localStorage.getItem(minesKey);
+const getMines = () => {
+  const size = localStorage.getItem(minesKey);
+
+  return size ? +size : 10;
+};
 
 const setIsStarted = (isStarted) => localStorage.setItem(isStartedKey, isStarted ? 1 : 0);
 
 const getIsStarted = () => !!+localStorage.getItem(isStartedKey);
+
+const setSize = (size) => localStorage.setItem(sizeKey, size);
+
+const getSize = () => {
+  const size = localStorage.getItem(sizeKey);
+
+  return size ? +size : 10;
+};
 
 const saveGame = () => {
   const game = {
@@ -51,7 +64,6 @@ const saveGame = () => {
     time: getTime(),
     moves: getMoves(),
     flags: getFlags(),
-    mines: getMines(),
   };
   localStorage.setItem(savedGameKey, JSON.stringify(game));
 };
@@ -63,15 +75,13 @@ const loadGame = () => {
     setTime(game.time);
     setMoves(game.moves);
     setFlags(game.flags);
-    setMines(game.mines);
     setIsStarted(true);
     return true;
   }
-  setGrid(initGrid(10));
+  setGrid(initGrid(getSize()));
   setTime(0);
   setMoves(0);
   setFlags(0);
-  setMines(10);
   setIsStarted(false);
   return false;
 };
@@ -91,6 +101,8 @@ export default {
   getFlags,
   setMines,
   getMines,
+  setSize,
+  getSize,
   setIsStarted,
   getIsStarted,
   saveGame,

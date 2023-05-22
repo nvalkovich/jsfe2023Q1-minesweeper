@@ -4,17 +4,18 @@ import storage from './storage.js';
 
 let gameEndCallback = null;
 
-const startNew = (defaultMinesNum) => {
+const startNew = () => {
+  const mines = storage.getMines();
   storage.removeGame();
   storage.loadGame();
-  counters.reset(defaultMinesNum);
+  counters.reset(mines);
   storage.setIsStarted(false);
 };
 
-const leftClickHandler = (defaultMinesNum, x, y) => {
+const leftClickHandler = (x, y) => {
   if (!storage.getIsStarted()) {
-    startNew(defaultMinesNum);
-    grid.setMines(10, y, x);
+    startNew();
+    grid.setMines(y, x);
     counters.startTimer();
     storage.setIsStarted(true);
   }
@@ -41,8 +42,8 @@ const addGameEndHandler = (callback) => {
 
 const rightClickHandler = (isFlaged, x, y) => {
   if (!storage.getIsStarted()) {
-    startNew(10);
-    grid.setMines(10, y, x);
+    startNew();
+    grid.setMines(y, x);
     counters.startTimer();
     storage.setIsStarted(true);
   }

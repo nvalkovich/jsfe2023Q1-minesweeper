@@ -1,12 +1,19 @@
 import storage from './storage.js';
 import State from './state.js';
 
-const getRandomNumber = (number) => Math.floor(Math.random() * ((number - 1) - 0 + 1) + 0);
+const getRandomNumbers = (size) => {
+  const array = [...Array(size).keys()];
+  for (let i = array.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
 
 const get = () => storage.getGrid();
 
 const getClosestCoordinates = (x, y) => {
-  const size = 10;
+  const size = storage.getSize();
   const closestCoordinates = [];
 
   closestCoordinates.push([x - 1, y - 1]);
@@ -31,30 +38,42 @@ const isMine = (x, y) => {
   return gridData[y][x].isMine;
 };
 
-const setMines = (minesNum, startY, startX) => {
+const setMines = (startY, startX) => {
   const grid = storage.getGrid();
+  const size = storage.getSize();
+  const minesNum = storage.getMines();
   let minesCount = 0;
 
+  const randomNumbers = getRandomNumbers(size ** 2);
+  let index = 0;
+
   while (minesCount < minesNum) {
-    const y = getRandomNumber(minesNum);
-    const x = getRandomNumber(minesNum);
+    const number = randomNumbers[index];
+    const y = Math.trunc(number / size);
+    const x = number % size;
     const cell = grid[y][x];
 
-    if (!cell.isMine && x !== startX && y !== startY) {
-      cell.isMine = true;
-      minesCount += 1;
+    if (x === startX && y === startY) {
+      index += 1;
+      // eslint-disable-next-line no-continue
+      continue;
+    }
 
-      const closest = getClosestCoordinates(x, y);
+    cell.isMine = true;
+    minesCount += 1;
 
-      for (let i = 0; i < closest.length; i += 1) {
-        const [closestX, closestY] = closest[i];
-        if (!grid[closestY][closestX].isMine) {
-          grid[closestY][closestX].mineCount += 1;
-        }
+    const closest = getClosestCoordinates(x, y);
+
+    for (let i = 0; i < closest.length; i += 1) {
+      const [closestX, closestY] = closest[i];
+      if (!grid[closestY][closestX].isMine) {
+        grid[closestY][closestX].mineCount += 1;
       }
     }
+
+    index += 1;
   }
-  storage.setMines(minesCount);
+
   storage.setGrid(grid);
 };
 
