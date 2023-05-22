@@ -22,12 +22,15 @@ const leftClickHandler = (defaultMinesNum, x, y) => {
 
   grid.openCell(x, y);
   counters.addMove();
-  const isMine = grid.isMine(x, y);
+  const time = storage.getTime();
+  const moves = storage.getMoves();
 
-  if (isMine) {
-    const time = storage.getTime();
-    const moves = storage.getMoves();
-    setTimeout(() => gameEndCallback(isMine, time, moves, x, y), 0);
+  if (grid.isMine(x, y)) {
+    setTimeout(() => gameEndCallback(true, time, moves, x, y), 0);
+    counters.stopTimer();
+    isStarted = false;
+  } else if (grid.isAllMinesFind()) {
+    setTimeout(() => gameEndCallback(false, time, moves, x, y), 0);
     counters.stopTimer();
     isStarted = false;
   }

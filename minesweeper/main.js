@@ -74,11 +74,14 @@ const renderGrid = () => {
   }
 };
 
-const renderPopup = (isMineClicked, time, moves, x, y) => {
-  if (isMineClicked) {
+const renderPopup = (isLoss, time, moves, x, y) => {
+  if (isLoss) {
     grid.showAllMines(x, y);
     renderGrid();
   }
+
+  const gameHeaderImage = document.querySelector('.game-header__img');
+  gameHeaderImage.classList.add(isLoss ? 'game-header__img_loss' : 'game-header__img_win');
 
   const popupWrapper = document.createElement('div');
   popupWrapper.className = 'popup-wrapper popup-wrapper_active';
@@ -90,13 +93,13 @@ const renderPopup = (isMineClicked, time, moves, x, y) => {
 
   const popupContent = document.createElement('div');
   popupContent.className = 'popup-container__content popup-content';
-  popupContent.classList.add(isMineClicked ? 'popup-content_loss' : 'popup-content_win');
+  popupContent.classList.add(isLoss ? 'popup-content_loss' : 'popup-content_win');
   popupContainer.append(popupContent);
 
   const popupMessage = document.createElement('h3');
   popupMessage.className = 'popup-content__message';
   popupContent.append(popupMessage);
-  popupMessage.innerText = isMineClicked
+  popupMessage.innerText = isLoss
     ? 'Game over. Try again'
     : `Hooray! You found all mines in ${time} seconds and ${moves} moves!`;
 
@@ -157,10 +160,9 @@ const renderPage = (gridSize) => {
   flagsCounter.append(flagsCounterState);
   flagsCounterState.innerText = '0';
 
-  const gameHeaderTitle = document.createElement('h2');
-  gameHeaderTitle.className = 'game-header__title';
-  gameHeader.append(gameHeaderTitle);
-  gameHeaderTitle.innerText = 'Minesweeper';
+  const gameHeaderImage = document.createElement('div');
+  gameHeaderImage.className = 'game-header__img';
+  gameHeader.append(gameHeaderImage);
 
   const minesCounter = document.createElement('div');
   minesCounter.className = 'game-header__mines-counter mines-counter';
