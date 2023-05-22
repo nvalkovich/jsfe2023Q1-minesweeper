@@ -41,7 +41,13 @@ const addGameEndHandler = (callback) => {
 };
 
 const rightClickHandler = (isFlaged, x, y) => {
-  if (!isStarted) return;
+  if (!isStarted) {
+    startNew(10);
+    grid.setMines(10, y, x);
+    counters.startTimer();
+    isStarted = true;
+  }
+
   grid.setFlag(isFlaged, x, y);
   counters.countFlags(isFlaged);
   counters.countMines(isFlaged);
