@@ -9,7 +9,7 @@
 .game-container {
   position: relative;
   max-width: 700px;
-  margin: 50px auto;
+  margin: 0px auto;
   border: 1px solid #cecece;
   background-color: #dcdcdc;
   box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
@@ -24,6 +24,23 @@
   align-items: center;
   gap: 30px;
   margin: 0 auto;
+}
+
+.game-header__img {
+  width: 70px;
+  height: 70px;
+  background-size: 80%;
+  background-image: url('assets/icons/wink-emoji-svgrepo-com.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.game-header__img_loss {
+  background-image: url('assets/icons/sad-svgrepo-com.svg');
+}
+
+.game-header__img_win {
+  background-image: url('assets/icons/happy-svgrepo-com.svg');
 }
 
 .timer,
@@ -81,7 +98,8 @@
 .popup-container,
 .popup-content__btn,
 .popup-btn-close,
-.actions__btn {
+.actions__btn,
+.game-header__img {
   border-bottom: 4px solid #7B7B7B;
   border-left: 4px solid #ffffff;
   border-top: 4px solid #ffffff;
