@@ -254,6 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const body = document.querySelector('.body');
+  const gameHeaderImage = document.querySelector('.game-header__img');
+
   body.addEventListener('click', (event) => {
     const clickedElement = event.target;
     const popupWrapper = document.querySelector('.popup-wrapper');
@@ -263,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (clickedElement.classList.contains('popup-content__btn')) {
       game.startNew(defaultMinesNum);
       popupWrapper.remove();
+      gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
       renderGrid();
     }
   });
@@ -271,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   startNewGameBtn.addEventListener('click', () => {
     game.startNew(defaultMinesNum);
+    gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
     renderGrid();
   });
 });
