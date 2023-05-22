@@ -6,16 +6,24 @@ let movesCallback = null;
 let flagsCallback = null;
 let minesCallback = null;
 
+let isTimerStarted = false;
+
 const startTimer = () => {
-  timer = setInterval(() => {
-    const seconds = storage.getTime() + 1;
-    storage.setTime(seconds);
-    tickCallback(seconds);
-  }, 1000);
+  if (!isTimerStarted) {
+    timer = setInterval(() => {
+      const seconds = storage.getTime() + 1;
+      storage.setTime(seconds);
+      tickCallback(seconds);
+    }, 1000);
+  }
+  isTimerStarted = true;
 };
 
 const stopTimer = () => {
-  clearInterval(timer);
+  if (isTimerStarted) {
+    clearInterval(timer);
+  }
+  isTimerStarted = false;
 };
 
 const addMove = () => {
@@ -25,17 +33,18 @@ const addMove = () => {
 };
 
 const countFlags = (isFlaged) => {
+  if (isFlaged === null || isFlaged === undefined) {
+    flagsCallback(storage.getFlags());
+    return;
+  }
   const flags = isFlaged ? storage.getFlags() - 1 : storage.getFlags() + 1;
   storage.setFlags(flags);
   flagsCallback(flags);
 };
 
-const countMines = (isFlaged) => {
-  const currentMinesNum = storage.getMines();
-  if (currentMinesNum === 0) return;
-
-  const mines = isFlaged ? storage.getMines() + 1 : storage.getMines() - 1;
-  storage.setMines(mines);
+const countMines = () => {
+  const leftMines = storage.getMines() - storage.getFlags();
+  const mines = leftMines < 0 ? 0 : leftMines;
   minesCallback(mines);
 };
 
@@ -66,6 +75,7 @@ const addMinesHandler = (callback) => {
 };
 
 export default {
+  isTimerStarted,
   startTimer,
   stopTimer,
   addMove,

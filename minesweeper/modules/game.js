@@ -4,20 +4,19 @@ import storage from './storage.js';
 
 let gameEndCallback = null;
 
-let isStarted = false;
-
 const startNew = (defaultMinesNum) => {
-  grid.init(10);
+  storage.removeGame();
+  storage.loadGame();
   counters.reset(defaultMinesNum);
-  isStarted = false;
+  storage.setIsStarted(false);
 };
 
 const leftClickHandler = (defaultMinesNum, x, y) => {
-  if (!isStarted) {
+  if (!storage.getIsStarted()) {
     startNew(defaultMinesNum);
     grid.setMines(10, y, x);
     counters.startTimer();
-    isStarted = true;
+    storage.setIsStarted(true);
   }
 
   grid.openCell(x, y);
@@ -28,11 +27,11 @@ const leftClickHandler = (defaultMinesNum, x, y) => {
   if (grid.isMine(x, y)) {
     setTimeout(() => gameEndCallback(true, time, moves, x, y), 0);
     counters.stopTimer();
-    isStarted = false;
+    storage.setIsStarted(false);
   } else if (grid.isAllMinesFind()) {
     setTimeout(() => gameEndCallback(false, time, moves, x, y), 0);
     counters.stopTimer();
-    isStarted = false;
+    storage.setIsStarted(false);
   }
 };
 
@@ -41,16 +40,20 @@ const addGameEndHandler = (callback) => {
 };
 
 const rightClickHandler = (isFlaged, x, y) => {
-  if (!isStarted) {
+  if (!storage.getIsStarted()) {
     startNew(10);
     grid.setMines(10, y, x);
     counters.startTimer();
-    isStarted = true;
+    storage.setIsStarted(true);
   }
 
   grid.setFlag(isFlaged, x, y);
   counters.countFlags(isFlaged);
-  counters.countMines(isFlaged);
+  counters.countMines();
+};
+
+const save = () => {
+  storage.saveGame();
 };
 
 export default {
@@ -58,4 +61,5 @@ export default {
   rightClickHandler,
   addGameEndHandler,
   startNew,
+  save,
 };

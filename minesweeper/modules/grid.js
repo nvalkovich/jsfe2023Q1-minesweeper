@@ -5,19 +5,6 @@ const getRandomNumber = (number) => Math.floor(Math.random() * ((number - 1) - 0
 
 const get = () => storage.getGrid();
 
-const init = (size) => {
-  const grid = [];
-  for (let y = 0; y < size; y += 1) {
-    const cellsRow = [];
-    for (let x = 0; x < size; x += 1) {
-      cellsRow.push({ isMine: false, mineCount: 0, state: State.Closed });
-    }
-    grid.push(cellsRow);
-  }
-
-  storage.setGrid(grid);
-};
-
 const getClosestCoordinates = (x, y) => {
   const size = 10;
   const closestCoordinates = [];
@@ -141,7 +128,6 @@ const setFlag = (isFlaged, x, y) => {
 };
 
 export default {
-  init,
   setMines,
   get,
   openCell,

@@ -2,6 +2,7 @@ import grid from './modules/grid.js';
 import game from './modules/game.js';
 import counters from './modules/counters.js';
 import State from './modules/state.js';
+import storage from './modules/storage.js';
 
 const tickHandler = (seconds) => {
   document.querySelector('.timer__state').innerText = seconds;
@@ -216,16 +217,25 @@ const renderPage = (gridSize) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  localStorage.clear();
+  const isLoaded = storage.loadGame();
+
   counters.addTickHandler(tickHandler);
   counters.addMoveHandler(movesHandler);
   counters.addFlagsHandler(flagsHandler);
   counters.addMinesHandler(minesHandler);
+  game.addGameEndHandler(renderPopup);
 
   const gridSize = 10;
   const defaultMinesNum = 10;
-  grid.init(gridSize);
   renderPage(gridSize);
+
+  if (isLoaded) {
+    tickHandler(storage.getTime());
+    movesHandler(storage.getMoves());
+    counters.countFlags();
+    counters.countMines();
+    counters.startTimer();
+  }
 
   window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
@@ -240,14 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (event.button === 0) {
       if (event.target.getAttribute('flaged')) return;
-      const isMine = event.target.getAttribute('is-mine');
-      if (isMine) {
-        game.addGameEndHandler(renderPopup);
-      }
       game.leftClickHandler(defaultMinesNum, x, y);
     } else if (event.button === 2) {
       if (event.target.getAttribute('opened')) return;
-      const isFlaged = event.target.getAttribute('flaged');
+      const isFlaged = !!event.target.getAttribute('flaged');
       game.rightClickHandler(isFlaged, x, y);
     }
     renderGrid();
@@ -276,5 +282,11 @@ document.addEventListener('DOMContentLoaded', () => {
     game.startNew(defaultMinesNum);
     gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
     renderGrid();
+  });
+
+  const saveGameBtn = document.querySelector('.actions__btn_save');
+
+  saveGameBtn.addEventListener('click', () => {
+    game.save();
   });
 });
