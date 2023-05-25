@@ -139,6 +139,50 @@ const renderGrid = () => {
   }
 };
 
+const renderResultsPopup = () => {
+  const popupWrapper = document.createElement('div');
+  popupWrapper.className = 'popup-wrapper popup-wrapper_active';
+  document.body.append(popupWrapper);
+
+  const popupContainer = document.createElement('div');
+  popupContainer.className = 'popup-container';
+  popupWrapper.append(popupContainer);
+
+  const popupContent = document.createElement('div');
+  popupContent.className = 'popup-container__content popup-content';
+  popupContainer.append(popupContent);
+
+  if (storage.getResults()) {
+    const resultsData = storage.getResults();
+
+    const resultListContainer = document.createElement('div');
+    resultListContainer.className = 'popup-content__result-list-container';
+    popupContent.append(resultListContainer);
+
+    const results = document.createElement('ol');
+    results.className = 'popup-content__result-list result-list';
+    resultListContainer.append(results);
+
+    for (let i = 0; i < resultsData.length; i += 1) {
+      const resultsItem = document.createElement('li');
+      resultsItem.className = 'results__item';
+      resultsItem.innerText = `You found all ${resultsData[i].mines} mines on size 
+        ${resultsData[i].size}x${resultsData[i].size} in ${resultsData[i].time} seconds 
+        and ${resultsData[i].moves} moves!`;
+      results.append(resultsItem);
+    }
+  } else {
+    const resultMessage = document.createElement('p');
+    resultMessage.className = 'popup-content__message popup-content__message_result';
+    popupContent.append(resultMessage);
+    resultMessage.innerText = "You don't have results yet";
+  }
+
+  const popupBtnClose = document.createElement('button');
+  popupBtnClose.className = 'popup-container__btn_result popup-btn-close popup-btn-close_result';
+  popupContainer.append(popupBtnClose);
+};
+
 const renderPopup = (isLoss, time, moves, x, y) => {
   const audioWin = document.querySelector('.audio_win');
   const audioLoss = document.querySelector('.audio_loss');
@@ -148,6 +192,7 @@ const renderPopup = (isLoss, time, moves, x, y) => {
     renderGrid();
     audioLoss.play();
   } else {
+    storage.saveResults();
     audioWin.play();
   }
 
@@ -184,7 +229,7 @@ const renderPopup = (isLoss, time, moves, x, y) => {
   popupBtn.innerText = 'Start new game';
 
   const popupBtnClose = document.createElement('button');
-  popupBtnClose.className = 'popup-container__btn popup-btn-close';
+  popupBtnClose.className = 'popup-container__btn popup-btn-close popup-btn-close_end-game';
   popupContainer.append(popupBtnClose);
 };
 
@@ -287,6 +332,10 @@ const renderPage = (gridSize) => {
   muteAudioBtn.className = 'actions__btn actions__btn_mute-audio';
   gameActions.append(muteAudioBtn);
 
+  const resultsBtn = document.createElement('button');
+  resultsBtn.className = 'actions__btn actions__btn_results';
+  gameActions.append(resultsBtn);
+
   const newGameBtn = document.createElement('button');
   newGameBtn.className = 'actions__btn actions__btn_new-game';
   gameActions.append(newGameBtn);
@@ -371,8 +420,6 @@ const renderPage = (gridSize) => {
   applySettingsBtn.innerText = 'Apply settings';
   setSettingsContainer.append(applySettingsBtn);
 
-  renderGrid();
-
   const audioCLick = document.createElement('audio');
   audioCLick.classList.add('audio_click');
   audioCLick.src = 'assets/audio/click.mp3';
@@ -392,6 +439,8 @@ const renderPage = (gridSize) => {
   audioLoss.classList.add('audio_loss');
   audioLoss.src = 'assets/audio/loss.mp3';
   body.appendChild(audioLoss);
+
+  renderGrid();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -402,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
   counters.addFlagsHandler(flagsHandler);
   counters.addMinesHandler(minesHandler);
   game.addGameEndHandler(renderPopup);
-
   const gridSize = storage.getSize();
   renderPage(gridSize);
 
@@ -460,9 +508,11 @@ document.addEventListener('DOMContentLoaded', () => {
   body.addEventListener('click', (event) => {
     const clickedElement = event.target;
     const popupWrapper = document.querySelector('.popup-wrapper');
-    if (clickedElement.classList.contains('popup-btn-close')) {
+    if (clickedElement.classList.contains('popup-btn-close_end-game')) {
       popupWrapper.remove();
       disableCells();
+    } else if (clickedElement.classList.contains('popup-btn-close_result')) {
+      popupWrapper.remove();
     } else if (clickedElement.classList.contains('popup-content__btn')) {
       game.startNew();
       popupWrapper.remove();
@@ -509,6 +559,12 @@ document.addEventListener('DOMContentLoaded', () => {
       muteAudio();
       storage.setAudio('mute');
     }
+  });
+
+  const resultsBtn = document.querySelector('.actions__btn_results');
+
+  resultsBtn.addEventListener('click', () => {
+    renderResultsPopup();
   });
 
   const saveGameBtn = document.querySelector('.actions__btn_save');

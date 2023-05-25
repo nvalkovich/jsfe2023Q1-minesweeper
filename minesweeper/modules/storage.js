@@ -10,6 +10,7 @@ const isStartedKey = 'isStarted';
 const themeKey = 'theme';
 const audioKey = 'audio';
 const savedGameKey = 'savedGame';
+const savedResultsKey = 'savedResults';
 
 const initGrid = (size) => {
   const grid = [];
@@ -68,6 +69,28 @@ const setAudio = (audio) => localStorage.setItem(audioKey, audio);
 
 const getAudio = () => localStorage.getItem(audioKey);
 
+const setResults = (results) => localStorage.setItem(savedResultsKey, JSON.stringify(results));
+
+const getResults = () => JSON.parse(localStorage.getItem(savedResultsKey));
+
+const saveResults = () => {
+  const results = getResults()
+    ? getResults()
+    : [];
+
+  if (results.length >= 10) {
+    results.pop();
+  }
+  results.unshift({
+    time: getTime(),
+    moves: getMoves(),
+    size: getSize(),
+    mines: getMines(),
+  });
+
+  setResults(results);
+};
+
 const saveGame = () => {
   const game = {
     grid: getGrid(),
@@ -76,6 +99,7 @@ const saveGame = () => {
     flags: getFlags(),
     theme: getTheme(),
     audio: getAudio(),
+    results: JSON.parse(localStorage.getItem(savedResultsKey)),
   };
   localStorage.setItem(savedGameKey, JSON.stringify(game));
 };
@@ -128,4 +152,7 @@ export default {
   saveGame,
   loadGame,
   removeGame,
+  setResults,
+  getResults,
+  saveResults,
 };

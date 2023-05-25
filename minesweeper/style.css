@@ -361,7 +361,8 @@
 }
 
 .actions__btn_change-theme,
-.actions__btn_mute-audio {
+.actions__btn_mute-audio,
+.actions__btn_results {
   width: 40px;
   background-size: 70%;
   background-repeat: no-repeat;
@@ -376,6 +377,10 @@
   background-image: url('assets/icons/volume-speaker-svgrepo-com.svg');
 }
 
+.actions__btn_results {
+  background-image: url('assets/icons/trophy-svgrepo-com.svg');
+}
+
 .actions__btn_muted-audio {
   background-image: url('assets/icons/volume-audio-svgrepo-com.svg');
 }
@@ -385,6 +390,22 @@
   flex-direction: column;
   text-align: center;
   gap: 10px;
+}
+
+.popup-container {
+  max-height: 95vh;
+}
+
+.results__item {
+  font-size: 14px;
+  max-width: 100%;
+  padding: 5px 5px 5px 5px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.popup-content__message_result {
+  font-size: 18px;
+  padding: 10px 5px 10px 20px;
 }
 
 @media (max-width: 534px) {
