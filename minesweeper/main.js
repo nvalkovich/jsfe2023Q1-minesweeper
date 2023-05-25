@@ -378,6 +378,11 @@ const renderPage = (gridSize) => {
   audioCLick.src = 'assets/audio/click.mp3';
   body.appendChild(audioCLick);
 
+  const audioFlag = document.createElement('audio');
+  audioFlag.classList.add('audio_flag');
+  audioFlag.src = 'assets/audio/flag.wav';
+  body.appendChild(audioFlag);
+
   const audioWin = document.createElement('audio');
   audioWin.classList.add('audio_win');
   audioWin.src = 'assets/audio/win.wav';
@@ -429,6 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const gridElement = document.querySelector('.grid');
   const audioCLick = document.querySelector('.audio_click');
+  const audioFlag = document.querySelector('.audio_flag');
 
   gridElement.addEventListener('mousedown', (event) => {
     event.preventDefault();
@@ -442,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (event.button === 2) {
       if (event.target.getAttribute('opened')) return;
       const isFlaged = !!event.target.getAttribute('flaged');
+      audioFlag.play();
       game.rightClickHandler(isFlaged, x, y);
     }
     renderGrid();
