@@ -364,7 +364,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (clickedElement.classList.contains('popup-content__btn')) {
       game.startNew();
       popupWrapper.remove();
-      gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
+      if (gameHeaderImage.classList.contains('game-header__img_loss')) {
+        gameHeaderImage.classList.remove('game-header__img_loss');
+      } else if (gameHeaderImage.classList.contains('game-header__img_win')) {
+        gameHeaderImage.classList.remove('game-header__img_win');
+      }
       renderGrid();
     }
   });
@@ -373,7 +377,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   startNewGameBtn.addEventListener('click', () => {
     game.startNew();
-    gameHeaderImage.classList.remove('game-header__img_loss' || 'game-header__img_win');
+    if (gameHeaderImage.classList.contains('game-header__img_loss')) {
+      gameHeaderImage.classList.remove('game-header__img_loss');
+    } else if (gameHeaderImage.classList.contains('game-header__img_win')) {
+      gameHeaderImage.classList.remove('game-header__img_win');
+    }
     renderGrid();
   });
 
@@ -391,8 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkedRadioSize = document.querySelector('input[name="size"]:checked');
     const size = checkedRadioSize ? checkedRadioSize.value : 10;
     storage.setSize(size);
-    storage.setMines(minesNumberInput.value);
 
+    if (+minesNumberInput.value < 10) {
+      minesNumberInput.value = 10;
+    } else if (+minesNumberInput.value > 99) {
+      minesNumberInput.value = 99;
+    }
+    storage.setMines(minesNumberInput.value);
     game.startNew(+minesNumberInput.value);
     renderGrid();
   });
