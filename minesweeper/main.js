@@ -436,8 +436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const x = +event.target.getAttribute('x');
 
     if (event.button === 0) {
+      if (event.target.getAttribute('flaged') || event.target.getAttribute('opened')) return;
       audioCLick.play();
-      if (event.target.getAttribute('flaged')) return;
       game.leftClickHandler(x, y);
     } else if (event.button === 2) {
       if (event.target.getAttribute('opened')) return;
