@@ -439,7 +439,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveGameBtn = document.querySelector('.actions__btn_save');
 
   saveGameBtn.addEventListener('click', () => {
-    game.save();
+    if (storage.getMoves() > 0) {
+      game.save();
+    }
   });
 
   const minesNumberInput = document.querySelector('.actions__input_mines');

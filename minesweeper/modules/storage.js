@@ -7,7 +7,7 @@ const flagsKey = 'flags';
 const minesKey = 'mines';
 const sizeKey = 'size';
 const isStartedKey = 'isStarted';
-const themeKey = 'themeKey';
+const themeKey = 'theme';
 const savedGameKey = 'savedGame';
 
 const initGrid = (size) => {
@@ -89,7 +89,7 @@ const loadGame = () => {
   setTime(0);
   setMoves(0);
   setFlags(0);
-  setTheme('light');
+  setTheme(getTheme());
   setIsStarted(false);
   return false;
 };
