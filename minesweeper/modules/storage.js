@@ -7,6 +7,7 @@ const flagsKey = 'flags';
 const minesKey = 'mines';
 const sizeKey = 'size';
 const isStartedKey = 'isStarted';
+const themeKey = 'themeKey';
 const savedGameKey = 'savedGame';
 
 const initGrid = (size) => {
@@ -58,12 +59,17 @@ const getSize = () => {
   return size ? +size : 10;
 };
 
+const setTheme = (theme) => localStorage.setItem(themeKey, theme);
+
+const getTheme = () => localStorage.getItem(themeKey);
+
 const saveGame = () => {
   const game = {
     grid: getGrid(),
     time: getTime(),
     moves: getMoves(),
     flags: getFlags(),
+    theme: getTheme(),
   };
   localStorage.setItem(savedGameKey, JSON.stringify(game));
 };
@@ -75,6 +81,7 @@ const loadGame = () => {
     setTime(game.time);
     setMoves(game.moves);
     setFlags(game.flags);
+    setTheme(game.theme);
     setIsStarted(true);
     return true;
   }
@@ -82,6 +89,7 @@ const loadGame = () => {
   setTime(0);
   setMoves(0);
   setFlags(0);
+  setTheme('light');
   setIsStarted(false);
   return false;
 };
@@ -103,6 +111,8 @@ export default {
   getMines,
   setSize,
   getSize,
+  setTheme,
+  getTheme,
   setIsStarted,
   getIsStarted,
   saveGame,

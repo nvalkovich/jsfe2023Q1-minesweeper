@@ -34,6 +34,34 @@ const disableCells = () => {
   }
 };
 
+const setDarkTheme = () => {
+  const body = document.querySelector('.body');
+  const gridElement = document.querySelector('.grid');
+  const changeThemeBtn = document.querySelector('.actions__btn_change-theme');
+  const gameHeader = document.querySelector('.game-header');
+  const gameContainer = document.querySelector('.game-container');
+
+  body.classList.add('body_dark-theme');
+  changeThemeBtn.classList.add('actions__btn_dark-theme');
+  gameContainer.classList.add('game-container_dark-theme');
+  gameHeader.classList.add('game-header_dark-theme');
+  gridElement.classList.add('grid_dark-theme');
+};
+
+const setLightTheme = () => {
+  const body = document.querySelector('.body');
+  const gridElement = document.querySelector('.grid');
+  const changeThemeBtn = document.querySelector('.actions__btn_change-theme');
+  const gameHeader = document.querySelector('.game-header');
+  const gameContainer = document.querySelector('.game-container');
+
+  body.classList.remove('body_dark-theme');
+  changeThemeBtn.classList.remove('actions__btn_dark-theme');
+  gameContainer.classList.remove('game-container_dark-theme');
+  gameHeader.classList.remove('game-header_dark-theme');
+  gridElement.classList.remove('grid_dark-theme');
+};
+
 const renderGrid = () => {
   removeGrid();
 
@@ -334,6 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
     counters.startTimer();
   }
 
+  const theme = storage.getTheme();
+  if (theme === 'dark') {
+    setDarkTheme();
+  } else {
+    setLightTheme();
+  }
+
   window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
   });
@@ -390,15 +425,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const changeThemeBtn = document.querySelector('.actions__btn_change-theme');
-  const gameHeader = document.querySelector('.game-header');
-  const gameContainer = document.querySelector('.game-container');
 
   changeThemeBtn.addEventListener('click', () => {
-    body.classList.toggle('body_dark-theme');
-    changeThemeBtn.classList.toggle('actions__btn_dark-theme');
-    gameContainer.classList.toggle('game-container_dark-theme');
-    gameHeader.classList.toggle('game-header_dark-theme');
-    gridElement.classList.toggle('grid_dark-theme');
+    if (storage.getTheme() === 'light') {
+      setDarkTheme();
+      storage.setTheme('dark');
+    } else {
+      setLightTheme();
+      storage.setTheme('light');
+    }
   });
 
   const saveGameBtn = document.querySelector('.actions__btn_save');
