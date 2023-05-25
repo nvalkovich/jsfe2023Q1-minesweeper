@@ -223,6 +223,10 @@ const renderPage = (gridSize) => {
   gameActions.append(saveProgressBtn);
   saveProgressBtn.innerText = 'Save progress';
 
+  const changeThemeBtn = document.createElement('button');
+  changeThemeBtn.className = 'actions__btn actions__btn_change-theme';
+  gameActions.append(changeThemeBtn);
+
   const newGameBtn = document.createElement('button');
   newGameBtn.className = 'actions__btn actions__btn_new-game';
   gameActions.append(newGameBtn);
@@ -383,6 +387,18 @@ document.addEventListener('DOMContentLoaded', () => {
       gameHeaderImage.classList.remove('game-header__img_win');
     }
     renderGrid();
+  });
+
+  const changeThemeBtn = document.querySelector('.actions__btn_change-theme');
+  const gameHeader = document.querySelector('.game-header');
+  const gameContainer = document.querySelector('.game-container');
+
+  changeThemeBtn.addEventListener('click', () => {
+    body.classList.toggle('body_dark-theme');
+    changeThemeBtn.classList.toggle('actions__btn_dark-theme');
+    gameContainer.classList.toggle('game-container_dark-theme');
+    gameHeader.classList.toggle('game-header_dark-theme');
+    gridElement.classList.toggle('grid_dark-theme');
   });
 
   const saveGameBtn = document.querySelector('.actions__btn_save');
