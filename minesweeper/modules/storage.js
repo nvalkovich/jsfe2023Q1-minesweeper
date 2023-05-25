@@ -8,6 +8,7 @@ const minesKey = 'mines';
 const sizeKey = 'size';
 const isStartedKey = 'isStarted';
 const themeKey = 'theme';
+const audioKey = 'audio';
 const savedGameKey = 'savedGame';
 
 const initGrid = (size) => {
@@ -63,6 +64,10 @@ const setTheme = (theme) => localStorage.setItem(themeKey, theme);
 
 const getTheme = () => localStorage.getItem(themeKey);
 
+const setAudio = (audio) => localStorage.setItem(audioKey, audio);
+
+const getAudio = () => localStorage.getItem(audioKey);
+
 const saveGame = () => {
   const game = {
     grid: getGrid(),
@@ -70,6 +75,7 @@ const saveGame = () => {
     moves: getMoves(),
     flags: getFlags(),
     theme: getTheme(),
+    audio: getAudio(),
   };
   localStorage.setItem(savedGameKey, JSON.stringify(game));
 };
@@ -82,6 +88,7 @@ const loadGame = () => {
     setMoves(game.moves);
     setFlags(game.flags);
     setTheme(game.theme);
+    setAudio(game.audio);
     setIsStarted(true);
     return true;
   }
@@ -90,6 +97,7 @@ const loadGame = () => {
   setMoves(0);
   setFlags(0);
   setTheme(getTheme());
+  setAudio(getAudio());
   setIsStarted(false);
   return false;
 };
@@ -113,6 +121,8 @@ export default {
   getSize,
   setTheme,
   getTheme,
+  setAudio,
+  getAudio,
   setIsStarted,
   getIsStarted,
   saveGame,

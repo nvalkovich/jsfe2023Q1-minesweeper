@@ -343,7 +343,7 @@
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 30px;
+  gap: 5px;
   padding-bottom: 20px;
 }
 
@@ -352,11 +352,32 @@
 }
 
 .actions__btn {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  width: 190px;
-  height: 50px;
+  width: 180px;
+  height: 40px;
+  margin: 10px 0px 15px 0px;
+}
+
+.actions__btn_change-theme,
+.actions__btn_mute-audio {
+  width: 40px;
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.actions__btn_change-theme {
+  background-image: url('assets/icons/invention-dark-svgrepo-com.svg');
+}
+
+.actions__btn_mute-audio {
+  background-image: url('assets/icons/volume-speaker-svgrepo-com.svg');
+}
+
+.actions__btn_muted-audio {
+  background-image: url('assets/icons/volume-audio-svgrepo-com.svg');
 }
 
 .actions__settings-container {
@@ -397,14 +418,6 @@
   background-color: rgba(29, 23, 54, 0.796);
   color: white;
   border: 4px solid rgba(29, 23, 54);
-}
-
-.actions__btn_change-theme {
-  width: 50px;
-  background-image: url('assets/icons/invention-dark-svgrepo-com.svg');
-  background-size: 70%;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .actions__btn_dark-theme {

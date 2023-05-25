@@ -62,6 +62,28 @@ const setLightTheme = () => {
   gridElement.classList.remove('grid_dark-theme');
 };
 
+const playAudio = () => {
+  const audioElements = document.getElementsByTagName('audio');
+  const toggleAudioMuteBtn = document.querySelector('.actions__btn_mute-audio');
+
+  for (let i = 0; i < audioElements.length; i += 1) {
+    audioElements[i].muted = false;
+  }
+
+  toggleAudioMuteBtn.classList.add('actions__btn_muted-audio');
+};
+
+const muteAudio = () => {
+  const audioElements = document.getElementsByTagName('audio');
+  const toggleAudioMuteBtn = document.querySelector('.actions__btn_mute-audio');
+
+  for (let i = 0; i < audioElements.length; i += 1) {
+    audioElements[i].muted = true;
+  }
+
+  toggleAudioMuteBtn.classList.remove('actions__btn_muted-audio');
+};
+
 const renderGrid = () => {
   removeGrid();
 
@@ -118,9 +140,15 @@ const renderGrid = () => {
 };
 
 const renderPopup = (isLoss, time, moves, x, y) => {
+  const audioWin = document.querySelector('.audio_win');
+  const audioLoss = document.querySelector('.audio_loss');
+
   if (isLoss) {
     grid.showAllMines(x, y);
     renderGrid();
+    audioLoss.play();
+  } else {
+    audioWin.play();
   }
 
   const gameHeaderImage = document.querySelector('.game-header__img');
@@ -255,6 +283,10 @@ const renderPage = (gridSize) => {
   changeThemeBtn.className = 'actions__btn actions__btn_change-theme';
   gameActions.append(changeThemeBtn);
 
+  const muteAudioBtn = document.createElement('button');
+  muteAudioBtn.className = 'actions__btn actions__btn_mute-audio';
+  gameActions.append(muteAudioBtn);
+
   const newGameBtn = document.createElement('button');
   newGameBtn.className = 'actions__btn actions__btn_new-game';
   gameActions.append(newGameBtn);
@@ -340,6 +372,21 @@ const renderPage = (gridSize) => {
   setSettingsContainer.append(applySettingsBtn);
 
   renderGrid();
+
+  const audioCLick = document.createElement('audio');
+  audioCLick.classList.add('audio_click');
+  audioCLick.src = 'assets/audio/click.mp3';
+  body.appendChild(audioCLick);
+
+  const audioWin = document.createElement('audio');
+  audioWin.classList.add('audio_win');
+  audioWin.src = 'assets/audio/win.wav';
+  body.appendChild(audioWin);
+
+  const audioLoss = document.createElement('audio');
+  audioLoss.classList.add('audio_loss');
+  audioLoss.src = 'assets/audio/loss.mp3';
+  body.appendChild(audioLoss);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -369,11 +416,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setLightTheme();
   }
 
+  const audio = storage.getAudio();
+  if (audio === 'play') {
+    playAudio();
+  } else {
+    muteAudio();
+  }
+
   window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
   });
 
   const gridElement = document.querySelector('.grid');
+  const audioCLick = document.querySelector('.audio_click');
 
   gridElement.addEventListener('mousedown', (event) => {
     event.preventDefault();
@@ -381,6 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const x = +event.target.getAttribute('x');
 
     if (event.button === 0) {
+      audioCLick.play();
       if (event.target.getAttribute('flaged')) return;
       game.leftClickHandler(x, y);
     } else if (event.button === 2) {
@@ -433,6 +489,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       setLightTheme();
       storage.setTheme('light');
+    }
+  });
+
+  const toggleAudioMuteBtn = document.querySelector('.actions__btn_mute-audio');
+
+  toggleAudioMuteBtn.addEventListener('click', () => {
+    if (storage.getAudio() === 'mute') {
+      playAudio();
+      storage.setAudio('play');
+    } else {
+      muteAudio();
+      storage.setAudio('mute');
     }
   });
 
