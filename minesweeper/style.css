@@ -206,6 +206,18 @@
   color: rgb(145, 5, 5);
 }
 
+.grid__cell[number='6'][opened='true'] {
+  color: rgb(192, 10, 174);
+}
+
+.grid__cell[number='7'][opened='true'] {
+  color: rgb(180, 122, 8);
+}
+
+.grid__cell[number='8'][opened='true'] {
+  color: rgb(129, 7, 129);
+}
+
 .popup-wrapper {
   display: none;
 }
