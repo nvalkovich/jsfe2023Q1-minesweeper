@@ -1,9 +1,11 @@
 1. [Task](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/minesweeper/README.md)
-2. Screenshot: 
+2. [Deploy](https://rolling-scopes-school.github.io/nvalkovich-JSFE2023Q1/minesweeper/)
+3. Screenshot:
+   
 ![image](https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1/assets/105563182/7f5b97cd-df1c-442b-93c3-dda47cb1cf9d)
 ![image](https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1/assets/105563182/7ddc4552-6829-4ca2-9be6-eb1faa064ed4)
 ![image](https://github.com/rolling-scopes-school/nvalkovich-JSFE2023Q1/assets/105563182/e03a67d2-3b69-4db2-bfb0-b0d7830c6955)
-3. [Deploy](https://rolling-scopes-school.github.io/nvalkovich-JSFE2023Q1/minesweeper/)
+
 - Basic scope 
   - [x] layout, design, responsive UI: +10
   - [x] at the beginning state of the game, the frame has size 10x10 and is filled with unopened cells. Should be 10 mines on field by default: +10
